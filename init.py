@@ -102,4 +102,4 @@ def generateData(archivo, datos, tipo):
             obj = tipo(*line) #Crea un nuevo objeto usando la información
             datos.append(obj) #Añade este objeto a la lista de datos
             
-writeDataInit() 
+print("Archivo init.py cargado")
