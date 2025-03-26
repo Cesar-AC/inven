@@ -39,17 +39,17 @@ def proveedores_mas_frecuentes(self):
     return lista_ordenada
 
 # Reporte 3: Ventas por período de tiempo
-def ventas_por_periodo(self, fecha_inicio, fecha_fin):
+def ventas_por_periodo(fecha_inicio, fecha_fin):
     resultado = []
-    for venta in self.ventas:
+    for venta in st.session_state["ventas"]:
         if fecha_inicio <= venta.fechaDeVenta <= fecha_fin:
             resultado.append(venta)
     return resultado
 
 # Reporte 4: Productos más vendidos
-def productos_mas_vendidos(self):
+def productos_mas_vendidos():
     conteo = {}
-    for venta in self.ventas:
+    for venta in st.session_state["ventas"]:
         id_producto = venta.idProducto
         if id_producto in conteo:
             conteo[id_producto] += 1

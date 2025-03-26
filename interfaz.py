@@ -221,11 +221,11 @@ class dashboard:
         elif opcion == "Ventas por período de tiempo":
             fecha_inicio = st.date_input("📅 Fecha de inicio")
             fecha_fin = st.date_input("📅 Fecha de fin")
-            ventas_filtradas = ventas_por_periodo(self, str(fecha_inicio), str(fecha_fin))
+            ventas_filtradas = ventas_por_periodo(str(fecha_inicio), str(fecha_fin))
             st.write("🛒 **Ventas en el período seleccionado:**", ventas_filtradas)
 
         elif opcion == "Productos más vendidos":
-            mas_vendidos = productos_mas_vendidos(self)
+            mas_vendidos = productos_mas_vendidos()
             st.write("🔥 **Productos más vendidos:**")
             for producto in mas_vendidos:
                st.write(f"- Producto {producto[0]}: {producto[1]} unidades vendidas")
