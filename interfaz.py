@@ -1,6 +1,5 @@
 #Importamos la librería streamlit junto a los datos iniciales
 import streamlit as st
-from init import writeDataInit, proveedores, ventas, compras
 from funciones import producto_menor_stock, proveedores_mas_frecuentes, ventas_por_periodo, productos_mas_vendidos, addProducto, addProveedor, addVenta, mostrarP, filtrarProductos, mostrarPv, mostrarV
 
 #Esta clase contiene/actúa como la interfaz
@@ -17,10 +16,6 @@ class dashboard:
             self.recargar_proveedores()
         if "ventas" not in st.session_state:
             self.recargar_ventas()
-        writeDataInit()
-        self.proveedores = proveedores
-        self.ventas = ventas
-        self.compras = compras
         self.sidebar()
         self.mostrar_contenido()
 

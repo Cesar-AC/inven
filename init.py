@@ -58,13 +58,14 @@ comprasFile = 'compras.csv'
 
 #Crea un archivo si necesita ser creado
 def writeDataInit():
+    print("Creando archivos...")
     global productos, proveedores, ventas, compras
 
     archivos = [productosFile, proveFile, ventasFile, comprasFile]
     objetos = [Producto, Proveedor, Venta, Compra] 
     datos = [productos, proveedores, ventas, compras]
 
-    for i in range(0, len(archivos)-1):
+    for i in range(0, len(archivos)):
         try:
             with open(archivos[i], 'x') as file:
                 writeData(archivos[i], datos[i])
@@ -101,5 +102,3 @@ def generateData(archivo, datos, tipo):
             line = line.strip().split(",") #Crea una lista que contiene toda la informacion del objeto
             obj = tipo(*line) #Crea un nuevo objeto usando la información
             datos.append(obj) #Añade este objeto a la lista de datos
-            
-print("Archivo init.py cargado")
