@@ -1,7 +1,7 @@
 #Importamos la librería streamlit junto a los datos iniciales
 import streamlit as st
 from init import proveedores, ventas, compras
-from funciones import producto_menor_stock, proveedores_mas_frecuentes, ventas_por_periodo, productos_mas_vendidos, addProducto, mostrarP, filtrarProductos
+from funciones import producto_menor_stock, proveedores_mas_frecuentes, ventas_por_periodo, productos_mas_vendidos, addProducto, addProveedor, addVenta, mostrarP, filtrarProductos, mostrarPv, mostrarV
 
 #Esta clase contiene/actúa como la interfaz
 class dashboard:
@@ -14,7 +14,11 @@ class dashboard:
         #Guarda los datos importados en atributos propios de la clase
         if "productos" not in st.session_state:
             self.recargar_productos()
-            
+        if "proveedores" not in st.session_state:
+            self.recargar_proveedores()
+        if "ventas" not in st.session_state:
+            self.recargar_ventas()
+
         self.proveedores = proveedores
         self.ventas = ventas
         self.compras = compras
@@ -24,6 +28,14 @@ class dashboard:
     def recargar_productos(self):
         from funciones import productos  # vuelve a cargar desde init
         st.session_state["productos"] = productos
+
+    def recargar_proveedores(self):
+        from funciones import proveedores  # vuelve a cargar desde init
+        st.session_state["proveedores"] = proveedores
+
+    def recargar_ventas(self):
+        from funciones import ventas  # vuelve a cargar desde init
+        st.session_state["ventas"] = ventas
     
     #Crea el menú lateral con las respectivas opciones
     def sidebar(self):
@@ -100,42 +112,79 @@ class dashboard:
         elif st.session_state.modo == 'agregar':
             addProducto(self.recargar_productos)
         elif st.session_state.modo == 'filtrar':
-            filtrarProductos()
+            filtrarProductos(st.session_state["productos"])
 
     def showProveedores(self):
         st.title("🚚 Proveedores")
-        st.subheader("Estás viendo los proveedores")
-        cols = st.columns(4)
-        valores = ["ID del Proveedor", "Nombre", "Contacto", "Dirección"]
-        for col, val in zip(cols, valores):
-            with col:
-                st.write(val) 
-        for proveedor in self.proveedores:
-            with st.container():
-                cols = st.columns(4)
-                valores = [proveedor.idProveedor, proveedor.nombre, proveedor.contacto, proveedor.direccion]
-                for col, val in zip(cols, valores):
-                    with col:
-                        st.write(val)
+        if 'modo' not in st.session_state:
+            st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar'
+        
+        # Creamos contenedores vacíos para header y botones
+        col1, col2 = st.columns(2)
+        header_placeholder = col1.empty()
+        buttons_placeholder = col2.empty()
+
+        # Botones dinámicos
+        with buttons_placeholder.container():
+            col1b = st.columns(1)[0]
+            with col1b:
+                if st.session_state.modo != 'ver':
+                    if st.button("📋Ver Proveedores"):
+                        st.session_state.modo = 'ver'
+                        st.rerun()
+                else:
+                    if st.button("🛒Añadir Proveedor"):
+                        st.session_state.modo = 'agregar'
+                        st.rerun()
+
+        # Header dinámico
+        with header_placeholder.container():
+            if st.session_state.modo == 'ver':
+                st.subheader("Estás viendo los proveedores")
+            elif st.session_state.modo == 'agregar':
+                st.subheader("Añadiendo proveedores")
+        
+        # Contenido dinámico
+        if st.session_state.modo == 'ver':
+            mostrarPv(st.session_state["proveedores"])
+        elif st.session_state.modo == 'agregar':
+            addProveedor(self.recargar_proveedores)
 
     def showVentas(self):
         st.title("💰 Ventas")
-        st.subheader("Estás viendo las ventas")
+        if 'modo' not in st.session_state:
+            st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar'
         
-        cols = st.columns(5)    
-        valores = ["ID de Venta", "ID del Producto", "ID del Cliente", "Fecha de Venta", "Cantidad"]
-        for col, val in zip(cols, valores):
-            with col:
-                st.write(val)
+        # Creamos contenedores vacíos para header y botones
+        col1, col2 = st.columns(2)
+        header_placeholder = col1.empty()
+        buttons_placeholder = col2.empty()
 
+        # Botones dinámicos
+        with buttons_placeholder.container():
+            col1b = st.columns(1)[0]
+            with col1b:
+                if st.session_state.modo != 'ver':
+                    if st.button("📋Ver Ventas"):
+                        st.session_state.modo = 'ver'
+                        st.rerun()
+                else:
+                    if st.button("🛒Añadir Venta"):
+                        st.session_state.modo = 'agregar'
+                        st.rerun()
+
+        # Header dinámico
+        with header_placeholder.container():
+            if st.session_state.modo == 'ver':
+                st.subheader("Estás viendo las ventas")
+            elif st.session_state.modo == 'agregar':
+                st.subheader("Añadiendo venta")
         
-        for venta in self.ventas:
-            with st.container():
-                cols = st.columns(5)
-                valores = [venta.idVenta, venta.idProducto, venta.idCliente, venta.fechaDeVenta, venta.cantidad]
-                for col, val in zip(cols, valores):
-                    with col:
-                        st.write(val)
+        # Contenido dinámico
+        if st.session_state.modo == 'ver':
+            mostrarV(st.session_state["ventas"])
+        elif st.session_state.modo == 'agregar':
+            addVenta(self.recargar_ventas)
             
     def showCompras(self):
         st.title("🛒 Compras")
