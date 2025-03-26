@@ -2,8 +2,8 @@ import streamlit as st
 import time
 from unidecode import unidecode
 from datetime import datetime
-from clases import Producto, Proveedor, Venta
-from init import generateData, productos, proveedores, ventas
+from clases import Producto, Proveedor, Venta, Compra
+from init import generateData, productos, proveedores, ventas, compras
 
 # Reporte 1: Producto con menor stock
 def producto_menor_stock(self):
@@ -131,6 +131,25 @@ def addVenta(recargar):
         time.sleep(1)
         st.rerun()
 
+def addCompra(recargar):
+    st.write("Ingrese los datos de la compra:")
+    cols = st.columns(3)
+    idProducto = cols[0].text_input("ID del Producto")
+    idProveedor = cols[1].text_input("ID del Proveedor")
+    cantidad = cols[2].text_input("Cantidad")
+    fecha = datetime.now().strftime("%d-%m-%Y")
+
+    if st.button("Guardar"):
+        id = buscarNextIDC()  # o como estés generando los IDs
+        with open('compras.csv', 'a') as file:
+            file.write(f"{id},{idProducto},{idProveedor},{fecha},{cantidad}\n")
+        st.success("✅ Datos guardados")
+        generateData('compras.csv', compras, Compra)
+        recargar()  # recarga el array de las ventas en la interfaz
+        st.session_state.modo = 'ver'
+        time.sleep(1)
+        st.rerun()
+
 def buscarNextID():
     last = productos[-1]
     lastID = last.idProducto
@@ -150,6 +169,13 @@ def buscarNextIDV():
     lastID = last.idVenta
     lastID = int(lastID.replace('v',''))
     nextID = f"v{lastID+1}"
+    return nextID
+
+def buscarNextIDC():
+    last = compras[-1]
+    lastID = last.idCompra
+    lastID = int(lastID.replace('c',''))
+    nextID = f"c{lastID+1}"
     return nextID
     
 def mostrarP(xproductos):
@@ -197,6 +223,21 @@ def mostrarV(xventas):
         with st.container():
             cols = st.columns(5)
             valores = [venta.idVenta, venta.idProducto, venta.idCliente, venta.fechaDeVenta, venta.cantidad]
+            for col, val in zip(cols, valores):
+                with col:
+                    st.write(val)
+
+def mostrarC(xcompras):
+    cols = st.columns(5)    
+    valores = ["ID de Compra", "ID del Producto", "ID del Proveedor", "Fecha de Venta", "Cantidad"]
+    for col, val in zip(cols, valores):
+        with col:
+            st.write(val)
+
+    for compra in xcompras:
+        with st.container():
+            cols = st.columns(5)
+            valores = [compra.idCompra, compra.idProducto, compra.idProveedor, compra.fechaDeCompra, compra.cantidad]
             for col, val in zip(cols, valores):
                 with col:
                     st.write(val)

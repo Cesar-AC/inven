@@ -1,6 +1,6 @@
 #Importamos la librería streamlit junto a los datos iniciales
 import streamlit as st
-from funciones import producto_menor_stock, proveedores_mas_frecuentes, ventas_por_periodo, productos_mas_vendidos, addProducto, addProveedor, addVenta, mostrarP, filtrarProductos, mostrarPv, mostrarV
+from funciones import producto_menor_stock, proveedores_mas_frecuentes, ventas_por_periodo, productos_mas_vendidos, addProducto, addProveedor, addVenta, addCompra, mostrarP, mostrarPv, mostrarV, mostrarC, filtrarProductos
 
 #Esta clase contiene/actúa como la interfaz
 class dashboard:
@@ -16,6 +16,9 @@ class dashboard:
             self.recargar_proveedores()
         if "ventas" not in st.session_state:
             self.recargar_ventas()
+        if "compras" not in st.session_state:
+            self.recargar_compras()
+        
         self.sidebar()
         self.mostrar_contenido()
 
@@ -30,6 +33,10 @@ class dashboard:
     def recargar_ventas(self):
         from funciones import ventas  # vuelve a cargar desde init
         st.session_state["ventas"] = ventas
+
+    def recargar_compras(self):
+        from funciones import compras  # vuelve a cargar desde init
+        st.session_state["compras"] = compras
     
     #Crea el menú lateral con las respectivas opciones
     def sidebar(self):
@@ -181,22 +188,56 @@ class dashboard:
             addVenta(self.recargar_ventas)
             
     def showCompras(self):
-        st.title("🛒 Compras")
-        st.subheader("Estás viendo las compras")
+        # st.title("🛒 Compras")
+        # st.subheader("Estás viendo las compras")
         
-        cols = st.columns(5)
-        valores = ["ID de Compra", "ID del Producto", "ID del Proveedor", "Fecha de Compra", "Cantidad"]
-        for col, val in zip(cols, valores):
-            with col:
-                st.write(val)
+        # cols = st.columns(5)
+        # valores = ["ID de Compra", "ID del Producto", "ID del Proveedor", "Fecha de Compra", "Cantidad"]
+        # for col, val in zip(cols, valores):
+        #     with col:
+        #         st.write(val)
                 
-        for compra in self.compras:
-            with st.container():
-                cols = st.columns(5)
-                valores = [compra.idCompra, compra.idProducto, compra.idProveedor, compra.fechaDeCompra, compra.cantidad]
-                for col, val in zip(cols, valores):
-                    with col:
-                        st.write(val)
+        # for compra in self.compras:
+        #     with st.container():
+        #         cols = st.columns(5)
+        #         valores = [compra.idCompra, compra.idProducto, compra.idProveedor, compra.fechaDeCompra, compra.cantidad]
+        #         for col, val in zip(cols, valores):
+        #             with col:
+        #                 st.write(val)
+        st.title("🛒 Compras")
+        if 'modo' not in st.session_state:
+            st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar'
+        
+        # Creamos contenedores vacíos para header y botones
+        col1, col2 = st.columns(2)
+        header_placeholder = col1.empty()
+        buttons_placeholder = col2.empty()
+
+        # Botones dinámicos
+        with buttons_placeholder.container():
+            col1b = st.columns(1)[0]
+            with col1b:
+                if st.session_state.modo != 'ver':
+                    if st.button("📋Ver Compras"):
+                        st.session_state.modo = 'ver'
+                        st.rerun()
+                else:
+                    if st.button("🛒Añadir Compra"):
+                        st.session_state.modo = 'agregar'
+                        st.rerun()
+
+        # Header dinámico
+        with header_placeholder.container():
+            if st.session_state.modo == 'ver':
+                st.subheader("Estás viendo las compras")
+            elif st.session_state.modo == 'agregar':
+                st.subheader("Añadiendo compra")
+        
+        # Contenido dinámico
+        if st.session_state.modo == 'ver':
+            mostrarC(st.session_state["compras"])
+        elif st.session_state.modo == 'agregar':
+            addCompra(self.recargar_compras)
                         
     def reportes(self):
         st.title("📑 Reportes")
