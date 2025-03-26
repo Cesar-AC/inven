@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 from unidecode import unidecode
 from datetime import datetime
 from clases import Producto, Proveedor, Venta
@@ -87,6 +88,7 @@ def addProducto(recargar):
         generateData('productos.csv', productos, Producto)
         recargar()  # recarga el array de productos en la interfaz
         st.session_state.modo = 'ver'
+        time.sleep(1)
         st.rerun()
 
 #Funcion añadir proveedor
@@ -105,6 +107,7 @@ def addProveedor(recargar):
         generateData('proveedores.csv', proveedores, Proveedor)
         recargar()  # recarga el array de los proveedores en la interfaz
         st.session_state.modo = 'ver'
+        time.sleep(1)
         st.rerun()
 
 #Funcion añadir venta
@@ -124,8 +127,8 @@ def addVenta(recargar):
         generateData('ventas.csv', ventas, Venta)
         recargar()  # recarga el array de las ventas en la interfaz
         st.session_state.modo = 'ver'
+        time.sleep(1)
         st.rerun()
-    
 
 def buscarNextID():
     last = productos[-1]
