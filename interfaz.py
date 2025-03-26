@@ -1,12 +1,7 @@
 #Importamos la librería streamlit junto a los datos iniciales
 import streamlit as st
-<<<<<<< HEAD
 from init import compras
-from funciones import producto_menor_stock, proveedores_mas_frecuentes, ventas_por_periodo, productos_mas_vendidos, addProducto, addProveedor, addVenta, mostrarP, filtrarProductos, mostrarPv, mostrarV
-=======
-from funciones import producto_menor_stock, proveedores_mas_frecuentes, ventas_por_periodo, productos_mas_vendidos, addProducto, addProveedor, addVenta, addCompra, mostrarP, mostrarPv, mostrarV, mostrarC, filtrarProductos
->>>>>>> origin/main
-
+from funciones import *
 #Esta clase contiene/actúa como la interfaz
 class dashboard:
     
@@ -21,13 +16,10 @@ class dashboard:
             self.recargar_proveedores()
         if "ventas" not in st.session_state:
             self.recargar_ventas()
-<<<<<<< HEAD
         self.compras = compras
-=======
         if "compras" not in st.session_state:
             self.recargar_compras()
         
->>>>>>> origin/main
         self.sidebar()
         self.mostrar_contenido()
 
@@ -115,14 +107,18 @@ class dashboard:
                 st.subheader("Añadiendo Producto")
             elif st.session_state.modo == 'filtrar':
                 st.subheader("Filtrando Productos")
+            elif st.session_state.modo == 'editar':
+                st.subheader("Editando Producto")
         
         # Contenido dinámico
         if st.session_state.modo == 'ver':
-            mostrarP(st.session_state["productos"])
+            mostrarP(st.session_state["productos"], self.recargar_productos)
         elif st.session_state.modo == 'agregar':
             addProducto(self.recargar_productos)
         elif st.session_state.modo == 'filtrar':
             filtrarProductos(st.session_state["productos"])
+        elif st.session_state.modo == 'editar':
+            actualizarP(st.session_state.id_editando, self.recargar_productos)
 
     def showProveedores(self):
         st.title("🚚 Proveedores")

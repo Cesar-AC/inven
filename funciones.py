@@ -1,3 +1,5 @@
+import re
+from matplotlib import lines
 import streamlit as st
 import time
 from unidecode import unidecode
@@ -67,7 +69,6 @@ def productos_mas_vendidos():
                 lista_ordenada[i], lista_ordenada[j] = lista_ordenada[j], lista_ordenada[i]
 
     return lista_ordenada
-
 
 #Funcion añadir producto
 def addProducto(recargar):
@@ -178,7 +179,7 @@ def buscarNextIDC():
     nextID = f"c{lastID+1}"
     return nextID
     
-def mostrarP(xproductos):
+def mostrarP(xproductos, recargar):
     cols = st.columns(7)
     valores = ["ID del Producto", "Nombre", "Categoría", "Precio", "Stock", "Descripción", "Opciones"]
     
@@ -208,10 +209,11 @@ def mostrarP(xproductos):
             
             # Ejecutar acción según la selección
             if opcion == "Actualizar":
-                actualizarP()
+                st.session_state.modo = 'editar'
+                st.session_state.id_editando = datos[0]
+                st.rerun()
             elif opcion == "Eliminar":
                 eliminarP()
-
 
 def mostrarPv(xproveedores):
     cols = st.columns(4)
@@ -295,8 +297,31 @@ def filtrarProductos(xproductos):
                         with col:
                             st.write(val)
 
-def actualizarP():
-    st.write("Actualiza")
+def actualizarP(id, recargar):
+    st.write("Ingrese los nuevos datos del producto:")
+    cols = st.columns(2)
+    precio = cols[0].text_input("Precio")
+    stock = cols[1].text_input("Stock")
+
+    if st.button("Guardar"):
+        with open('productos.csv', 'r') as file:
+            lines = file.readlines()
+
+        with open('productos.csv', 'w') as file:
+            for line in lines:
+                line_data = line.strip().split(',')
+                if line_data[0] == id:  # Si el ID coincide, actualizar valores
+                    line_data[3] = precio
+                    line_data[4] = stock
+                    file.write(",".join(line_data) + "\n")
+                else:
+                    file.write(line)
+        st.success("✅ Datos actualizados")
+        generateData('productos.csv', productos, Producto)
+        recargar()  # recarga el array de productos en la interfaz
+        st.session_state.modo = 'ver'
+        time.sleep(1)
+        st.rerun()
 
 def eliminarP():
     st.write("Eliminar")
