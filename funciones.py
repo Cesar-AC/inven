@@ -68,6 +68,7 @@ def productos_mas_vendidos(self):
 
     return lista_ordenada
 
+
 #Funcion añadir producto
 def addProducto(recargar):
     st.write("Ingrese los datos del nuevo producto:")
@@ -114,8 +115,8 @@ def addProveedor(recargar):
 def addVenta(recargar):
     st.write("Ingrese los datos de la venta:")
     cols = st.columns(3)
-    idCliente = cols[0].text_input("ID del cliente")
-    idProducto = cols[1].text_input("ID del Producto")
+    idProducto = cols[0].text_input("ID del Producto")
+    idCliente = cols[1].text_input("ID del cliente")
     cantidad = cols[2].text_input("Cantidad")
     fecha = datetime.now().strftime("%d-%m-%Y")
 
