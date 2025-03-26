@@ -3,18 +3,47 @@ from clases import Producto, Proveedor, Venta, Compra
 
 #listas con datos predeterminados 
 productos = [ 
-    Producto("prod001", "shampo", "Belleza", 10.50, 50, "Shampoo de uso diario"),
-    Producto("prod002", "computador", "Tecnología", 800, 10, "Computador portátil")
+    Producto("prod001","Shampoo","Belleza","10.5","50","Shampoo de uso diario"),
+    Producto("prod002","Crema Facial","Belleza","25","40","Hidratante para todo tipo de piel"),
+    Producto("prod003","Computador","Tecnología","800","10","Computador portátil"),
+    Producto("prod004","Mouse","Tecnología","20","30","Mouse óptico ergonómico"),
+    Producto("prod005","Nevado de Galleta","Alimentos","14.5","129381","Bebida de café con galleta Oreo y crema chantilly"),
+    Producto("prod006","Pan Integral","Alimentos","4","100","Pan de harina integral y semillas"),
+    Producto("prod007","Zapatillas Deportivas","Ropa y Calzado","60","30","Zapatillas cómodas para correr"),
+    Producto("prod008","Chaqueta de Cuero","Ropa y Calzado","120","10","Chaqueta clásica de cuero genuino"),
+    Producto("prod009","Cámara DSLR","Electrónica","1200","5","Cámara profesional con lente intercambiable"),
+    Producto("prod010","Smartwatch","Electrónica","150","12","Reloj inteligente con múltiples funciones"),
+    Producto("prod011","Set de Ollas","Hogar","80","15","Ollas de acero inoxidable con antiadherente"),
+    Producto("prod012","Sofá de Cuero","Hogar","700","5","Sofá de 3 plazas en cuero negro"),
+    Producto("prod013","Bicicleta Montaña","Deportes","500","7","Bicicleta resistente para todo terreno"),
+    Producto("prod014","Pesa Rusa 10kg","Deportes","40","15","Ideal para entrenamiento funcional"),
+    Producto("prod015","Juguete Educativo","Juguetes","20","50","Juego didáctico para niños"),
+    Producto("prod016","Carro de Control Remoto","Juguetes","50","20","Alcance de hasta 20 metros")
+
 ]
 
 proveedores = [
-    Proveedor("p01", "Luxe Supplies Corp.", "3204567890", "Avenida El Poblado #45-123 Medellín"),
-    Proveedor("p02", "Elite Global Traders", "3106543210", "Calle 93A #12-45 Bogotá")
+    Proveedor("p01","Luxe Supplies Corp.","3204567890","Avenida El Poblado #45-123 Medellín"),
+    Proveedor("p02","Elite Global Traders","3106543210","Calle 93A #12-45 Bogotá"),
+    Proveedor("p03","Distribuidora Andes","3157896543","Carrera 50 #30-20 Cali"),
+    Proveedor("p04","Innovatech Solutions","3229874561","Calle 100 #25-30 Barranquilla"),
+    Proveedor("p05","Alimentos del Valle","3112345678","Avenida Central #5-67 Bucaramanga"),
+    Proveedor("p06","Hogar y Estilo S.A.","3187654321","Calle 45 #10-15 Cartagena")
+
 ]
 
 ventas = [
-    Venta("v1", "prod001", "cliente01", "2025-03-20", 5),
-    Venta("v2", "prod002", "cliente02", "2025-03-21", 2)
+    Venta("v01","prod001","cliente01","2025-03-20","5"),
+    Venta("v02","prod002","cliente02","2025-03-21","2"),
+    Venta("v03","prod005","cliente03","2025-03-22","3"),
+    Venta("v04","prod007","cliente04","2025-03-23","1"),
+    Venta("v05","prod008","cliente10","2025-03-23","2"),
+    Venta("v06","prod003","cliente09","2025-03-24","1"),
+    Venta("v07","prod010","cliente05","2025-03-24","4"),
+    Venta("v08","prod012","cliente06","2025-03-25","2"),
+    Venta("v09","prod016","cliente08","2025-03-25","3"),
+    Venta("v10","prod014","cliente07","2025-03-26","6"),
+
 ]
 
 compras = [
