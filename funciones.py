@@ -153,24 +153,39 @@ def buscarNextIDV():
     return nextID
     
 def mostrarP(xproductos):
-    cols = st.columns(6)
-    valores = ["ID del Producto", "Nombre", "Categoría", "Precio", "Stock", "Descripción"]
-    #Recorre cada par columna-valor y escribe en la columna 
+    cols = st.columns(7)
+    valores = ["ID del Producto", "Nombre", "Categoría", "Precio", "Stock", "Descripción", "Opciones"]
+    
+    # Encabezados
     for col, val in zip(cols, valores): 
-        with col:
-            st.write(val)
+        col.write(f"**{val}**")
 
+    # Iterar sobre los productos y mostrarlos en filas
     for producto in xproductos:
-        with st.container(): #Agrupa las columnas dentro de un contenedor
-            cols = st.columns(6)
-            #Toma los atributos de cada producto y los guarda en valores
-            valores = [
-                producto.idProducto, producto.nombre, producto.categoria, producto.precio,                     
-                producto.stock,producto.descripcion]
-            #Escribe cada atributo del producto en su respectiva columna
-            for col, val in zip(cols, valores):
-                with col:
-                    st.write(val)
+        cols = st.columns(7)  # Nueva fila con 7 columnas
+        
+        # Mostrar datos del producto en las primeras 6 columnas
+        datos = [
+            producto.idProducto, producto.nombre, producto.categoria, 
+            producto.precio, producto.stock, producto.descripcion
+        ]
+        for col, val in zip(cols[:6], datos):
+            col.write(val)
+
+        # Desplegable en la última columna
+        with cols[6]:
+            opcion = st.selectbox(
+                "", 
+                ["Elija", "Actualizar", "Eliminar"], 
+                key=f"opt_{producto.idProducto}"
+            )
+            
+            # Ejecutar acción según la selección
+            if opcion == "Actualizar":
+                actualizarP()
+            elif opcion == "Eliminar":
+                eliminarP()
+
 
 def mostrarPv(xproveedores):
     cols = st.columns(4)
@@ -238,3 +253,9 @@ def filtrarProductos(xproductos):
                     for col, val in zip(cols, valores):
                         with col:
                             st.write(val)
+
+def actualizarP():
+    st.write("Actualiza")
+
+def eliminarP():
+    st.write("Eliminar")
