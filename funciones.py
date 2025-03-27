@@ -337,7 +337,6 @@ def eliminarP(id, recargar):
             if line_data[0] != id:
                 productos_filtrados.append(line_data)
         
-        # Reasignar IDs secuenciales sin enumerate ni zfill
         contador_id = 1
         for producto in productos_filtrados:
             nuevo_id = "prod" + ("00" + str(contador_id))[-3:]  # Formato prod001, prod002...
