@@ -1,5 +1,5 @@
 ID del Producto, Nombre, Categoría, Precio, Stock, Descripción
-prod001,Shampoo,Belleza,50000,3004,Shampoo de uso diario
+prod001,Shampoo,Belleza,10.5,50,Shampoo de uso diario
 prod002,Crema Facial,Belleza,25,40,Hidratante para todo tipo de piel
 prod003,Computador,Tecnología,800,10,Computador portátil
 prod004,Mouse,Tecnología,20,30,Mouse óptico ergonómico
