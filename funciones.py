@@ -73,7 +73,11 @@ def addProducto(recargar):
     st.write("Ingrese los datos del nuevo producto:")
     cols = st.columns(3)
     nombre = cols[0].text_input("Nombre")
-    categoria = cols[1].text_input("Categoría")
+    categorias = ["Belleza", "Tecnología", "Alimentos", "Ropa y Calzado", "Electrónica", "Hogar", "Deportes", "Juguetes"]
+    categoria = cols[1].selectbox(
+            "",
+            options=["Categoria"] + [categoria for categoria in categorias]
+        )
     precio = cols[2].text_input("Precio")
 
     cols = st.columns(2)
@@ -160,11 +164,17 @@ def addVenta(recargar, recargarP):
         st.rerun()
 
 #Función añadir compra
-def addCompra(recargar):
+def addCompra(recargar, recargarP):
     st.write("Ingrese los datos de la compra:")
     cols = st.columns(3)
-    idProducto = cols[0].text_input("ID del Producto (ejemplo: prod001)")
-    idProveedor = cols[1].text_input("ID del Proveedor (ejemplo: p01)")
+    idProducto = cols[0].selectbox(
+            "",
+            options=["ID del Producto"] + [producto.idProducto for producto in productos]
+        )
+    idProveedor = cols[1].selectbox(
+            "",
+            options=["ID del Proveedor"] + [proveedor.idProveedor for proveedor in proveedores]
+        )
     cantidad = cols[2].text_input("Cantidad")
     fecha = datetime.now().strftime("%d-%m-%Y")
 
