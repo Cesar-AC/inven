@@ -163,7 +163,7 @@ class dashboard:
     def showVentas(self):
         st.title("💰 Ventas")
         if 'modo' not in st.session_state:
-            st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar'
+            st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar', 'editar' o 'eliminar'
         
         # Creamos contenedores vacíos para header y botones
         col1, col2 = st.columns(2)
@@ -195,6 +195,10 @@ class dashboard:
             mostrarV(st.session_state["ventas"])
         elif st.session_state.modo == 'agregar':
             addVenta(self.recargar_ventas, self.recargar_productos)
+        elif st.session_state.modo == 'editar':
+            actualizarV(st.session_state.id_editando, self.recargar_ventas)
+        elif st.session_state.modo == 'eliminar':
+            eliminarV(st.session_state.id_eliminando, self.recargar_ventas)
             
     def showCompras(self):
         st.title("🛒 Compras")
@@ -231,6 +235,10 @@ class dashboard:
             mostrarC(st.session_state["compras"])
         elif st.session_state.modo == 'agregar':
             addCompra(self.recargar_compras, self.recargar_productos)
+        elif st.session_state.modo == 'editar':
+            actualizarC(st.session_state.id_editando, self.recargar_compras)
+        elif st.session_state.modo == 'eliminar':
+            eliminarC(st.session_state.id_eliminando, self.recargar_compras)
                         
     def reportes(self):
         st.title("📑 Reportes")
