@@ -241,7 +241,7 @@ class dashboard:
             "Proveedores más frecuentes",
             "Ventas por período de tiempo",
             "Productos más vendidos"
-        ])
+        ])  
         if opcion == "Productos con menor stock":
             menor_stock = producto_menor_stock(self)
             st.write("📉 **Producto con menor stock:**", menor_stock)
@@ -252,11 +252,20 @@ class dashboard:
             for proveedor in proveedores:
                 st.write(f"- Proveedor {proveedor[0]}: {proveedor[1]} compras")
 
-        elif opcion == "Ventas por período de tiempo":
-            fecha_inicio = st.date_input("📅 Fecha de inicio")
-            fecha_fin = st.date_input("📅 Fecha de fin")
-            ventas_filtradas = ventas_por_periodo(str(fecha_inicio), str(fecha_fin))
-            st.write("🛒 **Ventas en el período seleccionado:**", ventas_filtradas)
+        # elif opcion == "Ventas por período de tiempo":
+        #     fecha_inicio = st.date_input("📅 Fecha de inicio")
+        #     fecha_fin = st.date_input("📅 Fecha de fin")
+        #     ventas_filtradas = ventas_por_periodo(str(fecha_inicio), str(fecha_fin))
+        #     st.write("🛒 **Ventas en el período seleccionado:**", ventas_filtradas)
+        elif opcion == "Ventas por periodo de tiempo":
+             fecha_inicio = input("Ingrese la fecha inicial: Año-mes-dia\n")
+
+             fecha_fin = input("Ingrese la fecha de finalización: Año-mes-dia\n")
+
+
+
+
+
 
         elif opcion == "Productos más vendidos":
             mas_vendidos = productos_mas_vendidos()
