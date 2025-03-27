@@ -260,20 +260,29 @@ class dashboard:
             for proveedor in proveedores:
                 st.write(f"- Proveedor {proveedor[0]}: {proveedor[1]} compras")
 
-        # elif opcion == "Ventas por período de tiempo":
-        #     fecha_inicio = st.date_input("📅 Fecha de inicio")
-        #     fecha_fin = st.date_input("📅 Fecha de fin")
-        #     ventas_filtradas = ventas_por_periodo(str(fecha_inicio), str(fecha_fin))
-        #     st.write("🛒 **Ventas en el período seleccionado:**", ventas_filtradas)
-        elif opcion == "Ventas por periodo de tiempo":
-             fecha_inicio = input("Ingrese la fecha inicial: Año-mes-dia\n")
+        elif opcion == "Ventas por período de tiempo":
+            fecha_inicio = st.date_input("📅 Fecha de inicio")
+            fecha_fin = st.date_input("📅 Fecha de fin")
+            ventas_filtradas = ventas_por_periodo(str(fecha_inicio), str(fecha_fin))
 
-             fecha_fin = input("Ingrese la fecha de finalización: Año-mes-dia\n")
+            if ventas_filtradas:
+                st.write("🛒 **Ventas en el período seleccionado:**")
 
+                cols = st.columns(5)
+                encabezados = ["ID Venta", "ID Producto", "ID Cliente", "Fecha", "Cantidad"]
 
+                for col, titulo in zip(cols, encabezados):
+                    col.write(f"**{titulo}**")
 
+                for venta in ventas_filtradas:
+                    cols = st.columns(5)
+                    datos = [venta.idVenta, venta.idProducto, venta.idCliente, venta.fechaDeVenta, venta.cantidad]
 
+                    for col, dato in zip(cols, datos):
+                        col.write(dato)
 
+            else:
+                st.write("❌ No hay ventas en el período seleccionado.")
 
         elif opcion == "Productos más vendidos":
             mas_vendidos = productos_mas_vendidos()
