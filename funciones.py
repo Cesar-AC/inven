@@ -2,7 +2,7 @@ import streamlit as st
 import time
 from unidecode import unidecode
 from datetime import datetime
-from clases import Producto, Proveedor, Venta, Compra
+from clases import *
 from init import generateData, productos, proveedores, ventas, compras
 
 # Reporte 1: Producto con menor stock
@@ -159,7 +159,8 @@ def addVenta(recargar, recargarP):
         time.sleep(1)
         st.rerun()
 
-def addCompra(recargar, recargarP):
+#Función añadir compra
+def addCompra(recargar):
     st.write("Ingrese los datos de la compra:")
     cols = st.columns(3)
     idProducto = cols[0].text_input("ID del Producto (ejemplo: prod001)")
@@ -207,7 +208,7 @@ def buscarNextIDC():
     nextID = f"c{lastID+1}"
     return nextID
     
-def mostrarP(xproductos, recargar):
+def mostrarP(xproductos):
     cols = st.columns(7)
     valores = ["ID del Producto", "Nombre", "Categoría", "Precio", "Stock", "Descripción", "Opciones"]
     
@@ -272,6 +273,16 @@ def mostrarPv(xproveedores):
                 key=f"opt_{proveedor.idProveedor}"
             )
 
+            # Ejecutar acción según la selección
+            if opcion == "Actualizar":
+                st.session_state.modo = 'editar'
+                st.session_state.id_editando = datos[0]
+                st.rerun()
+            elif opcion == "Eliminar":
+                st.session_state.modo = 'eliminar'
+                st.session_state.id_eliminando = datos[0]
+                st.rerun()
+
 def mostrarV(xventas):
     cols = st.columns(6)    
     valores = ["ID de Venta", "ID del Producto", "ID del Cliente", "Fecha de Venta", "Cantidad", "Opciones"]
@@ -296,10 +307,10 @@ def mostrarV(xventas):
 
 def mostrarC(xcompras,):
     if st.session_state.get("modo") == "editar":
-        actualizarC(st.session_state.get("id_editando"), recargar)
+        actualizarC(st.session_state.get("id_editando"))
         return
     elif st.session_state.get("modo") == "eliminar":
-        eliminarC(st.session_state.get("id_eliminando"), recargar)
+        eliminarC(st.session_state.get("id_eliminando"))
         return
 
     cols = st.columns(6)    
@@ -370,10 +381,14 @@ def filtrarProductos(xproductos):
                             st.write(val)
 
 def actualizarP(id, recargar):
-    st.write("Ingrese los nuevos datos del producto:")
-    cols = st.columns(2)
-    precio = cols[0].text_input("Precio")
-    stock = cols[1].text_input("Stock")
+    st.subheader("Ingrese los nuevos datos del producto:")
+    st.write("Si el dato no necesita ser cambiado, dejeló vacío.")
+    cols = st.columns(5)
+    Nombre = cols[0].text_input("Nombre")
+    Categoria = cols[1].text_input("Categoria")
+    Precio = cols[2].text_input("Precio")
+    Stock = cols[3].text_input("Stock")
+    Descripcion = cols[4].text_input("Descripción")
 
     if st.button("Guardar"):
         with open('productos.csv', 'r') as file:
@@ -382,15 +397,112 @@ def actualizarP(id, recargar):
         with open('productos.csv', 'w') as file:
             for line in lines:
                 line_data = line.strip().split(',')
-                if line_data[0] == id:  # Si el ID coincide, actualizar valores
-                    line_data[3] = precio
-                    line_data[4] = stock
+                if line_data[0] == id:  #Si el ID coincide, verifica que la línea no esté vacía y la actualiza
+                    if Nombre.strip(): line_data[1] = Nombre
+                    if Categoria.strip(): line_data[2] = Categoria
+                    if Precio.strip(): line_data[3] = Precio
+                    if Stock.strip(): line_data[4] = Stock
+                    if Descripcion.strip(): line_data[5] = Descripcion
                     file.write(",".join(line_data) + "\n")
                 else:
                     file.write(line)
         st.success("✅ Datos actualizados")
         generateData('productos.csv', productos, Producto)
         recargar()  # recarga el array de productos en la interfaz
+        st.session_state.modo = 'ver'
+        time.sleep(1)
+        st.rerun()
+
+def actualizarPv(id, recargar):
+    st.subheader("Ingrese los nuevos datos del proveedor:")
+    st.write("Si el dato no necesita ser cambiado, dejeló vacío.")
+    cols = st.columns(3)
+    Nombre = cols[0].text_input("Nombre")
+    Contacto = cols[1].text_input("Contacto")
+    Direccion = cols[2].text_input("Dirección")
+
+    if st.button("Guardar"):
+        with open('proveedores.csv', 'r') as file:
+            lines = file.readlines()
+
+        with open('proveedores.csv', 'w') as file:
+            for line in lines:
+                line_data = line.strip().split(',')
+                if line_data[0] == id:  #Si el ID coincide, verifica que la línea no esté vacía y la actualiza
+                    if Nombre.strip(): line_data[1] = Nombre
+                    if Contacto.strip(): line_data[2] = Contacto
+                    if Direccion.strip(): line_data[3] = Direccion
+                    file.write(",".join(line_data) + "\n")
+                else:
+                    file.write(line)
+        st.success("✅ Datos actualizados")
+        generateData('proveedores.csv', proveedores, Proveedor)
+        recargar()  # recarga el array de productos en la interfaz
+        st.session_state.modo = 'ver'
+        time.sleep(1)
+        st.rerun()
+
+def actualizarC(id, recargar):
+    st.subheader("Ingrese los nuevos datos de la compra:")
+    st.write("Si el dato no necesita ser cambiado, dejeló vacío.")
+    cols = st.columns(4)
+    idProducto = cols[0].text_input("ID del producto")
+    idProveedor = cols[1].text_input("ID del proveedor")
+    fecha = cols[2].text_input("Fecha de compra")
+    cantidad = cols[3].text_input("Cantidad")
+
+    if st.button("Guardar"):
+        with open('compras.csv', 'r') as file:
+            lines = file.readlines()
+
+        with open('compras.csv', 'w') as file:
+            for line in lines:
+                line_data = line.strip().split(',')
+                if line_data[0] == id:  #Si el ID coincide, verifica que la línea no esté vacía y la actualiza
+                    if idProducto.strip(): line_data[1] = idProducto
+                    if idProveedor.strip(): line_data[2] = idProveedor
+                    if fecha.strip(): line_data[2] = fecha
+                    if cantidad.strip(): line_data[2] = cantidad
+                    file.write(",".join(line_data) + "\n")
+                else:
+                    file.write(line)
+        
+        st.success("✅ Datos actualizados")
+        generateData('compras.csv', compras, Compra)
+        recargar()  # Recarga el array de compras en la interfaz
+        st.session_state.modo = 'ver'
+        time.sleep(1)
+        st.rerun()
+
+def actualizarV(id, recargar):
+    #ID de Venta, ID del Producto, ID del Cliente, Fecha de Venta, Cantidad
+    st.subheader("Ingrese los nuevos datos de la venta:")
+    st.write("Si el dato no necesita ser cambiado, dejeló vacío.")
+    cols = st.columns(4)
+    idProducto = cols[0].text_input("ID del producto")
+    idCliente = cols[1].text_input("ID del cliente")
+    fecha = cols[2].text_input("Fecha de venta")
+    cantidad = cols[3].text_input("Cantidad")
+
+    if st.button("Guardar"):
+        with open('ventas.csv', 'r') as file:
+            lines = file.readlines()
+
+        with open('ventas.csv', 'w') as file:
+            for line in lines:
+                line_data = line.strip().split(',')
+                if line_data[0] == id:  #Si el ID coincide, verifica que la línea no esté vacía y la actualiza
+                    if idProducto.strip(): line_data[1] = idProducto
+                    if idCliente.strip(): line_data[2] = idCliente
+                    if fecha.strip(): line_data[2] = fecha
+                    if cantidad.strip(): line_data[2] = cantidad
+                    file.write(",".join(line_data) + "\n")
+                else:
+                    file.write(line)
+        
+        st.success("✅ Datos actualizados")
+        generateData('ventas.csv', ventas, Venta)
+        recargar()  # Recarga el array de compras en la interfaz
         st.session_state.modo = 'ver'
         time.sleep(1)
         st.rerun()
@@ -411,7 +523,7 @@ def eliminarP(id, recargar):
             
             contador_id = 1
             for producto in productos_filtrados:
-                nuevo_id = "prod" + ("00" + str(contador_id))[-3:]  # Formato prod001, prod002...
+                nuevo_id = "prod" + str(contador_id).zfill(3)  # Formato prod001, prod002...
                 producto[0] = nuevo_id
                 contador_id += 1
             
@@ -426,7 +538,42 @@ def eliminarP(id, recargar):
             st.session_state.modo = 'ver'
             time.sleep(1)
             st.rerun()
-    if st.button("No"):
+    elif st.button("No"):
+        st.session_state.modo = 'ver'
+        st.rerun()
+
+def eliminarPv(id, recargar):
+    st.write(f"¿Seguro que deseas eliminar el proveedor con ID {id}?")
+    if st.button("Eliminar"):        
+        with open('proveedores.csv', 'r') as file:
+            lines = file.readlines()
+        
+        encabezado = lines[0]
+        proveedoresFiltrados = []
+
+        for line in lines [1:]:
+            line_data = line.strip().split(',')
+            if line_data[0] != id:
+                proveedoresFiltrados.append(line_data)
+        
+        contador_id = 1
+        for proveedor in proveedoresFiltrados:
+            nuevo_id = "p" + str(contador_id).zfill(3)
+            proveedor[0] = nuevo_id
+            contador_id += 1
+        
+        with open('proveedores.csv', 'w') as file:
+            file.write(encabezado)
+            for proveedor in proveedoresFiltrados:
+                file.write(",".join(proveedor) + "\n")
+        
+        st.success("✅ Proveedor eliminado y IDs actualizados")
+        generateData('proveedores.csv', proveedores, Proveedor)
+        recargar()  # Recarga los proveedores en la interfaz
+        st.session_state.modo = 'ver'
+        time.sleep(1)
+        st.rerun()
+    elif st.button("No"):
         st.session_state.modo = 'ver'
         st.rerun()
 
@@ -465,29 +612,3 @@ def eliminarC(id, recargar):
     #     st.session_state.modo = 'ver'
     #     st.rerun()
 
-def actualizarC(id, recargar):
-    st.write("Ingrese los nuevos datos de la compra:")
-    cols = st.columns(2)
-    fecha = cols[0].text_input("Fecha de Compra")
-    cantidad = cols[1].text_input("Cantidad")
-
-    if st.button("Guardar"):
-        with open('compras.csv', 'r') as file:
-            lines = file.readlines()
-
-        with open('compras.csv', 'w') as file:
-            for line in lines:
-                line_data = line.strip().split(',')
-                if line_data[0] == id:  # Si el ID coincide, actualizar valores
-                    line_data[3] = fecha
-                    line_data[4] = cantidad
-                    file.write(",".join(line_data) + "\n")
-                else:
-                    file.write(line)
-        
-        st.success("✅ Datos actualizados")
-        generateData('compras.csv', compras, Compra)
-        recargar()  # Recarga el array de compras en la interfaz
-        st.session_state.modo = 'ver'
-        time.sleep(1)
-        st.rerun()
