@@ -259,7 +259,7 @@ class dashboard:
             st.write("📉 **Producto con menor stock:**", menor_stock)
 
         elif opcion == "Proveedores más frecuentes":
-            proveedores = proveedores_mas_frecuentes(self)
+            proveedores = proveedores_mas_frecuentes(st.session_state["compras"])
             st.write("🏢 **Proveedores más frecuentes:**")
             for proveedor in proveedores:
                 st.write(f"- Proveedor {proveedor[0]}: {proveedor[1]} compras")

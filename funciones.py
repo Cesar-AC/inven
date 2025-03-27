@@ -19,7 +19,7 @@ def producto_menor_stock(self):
 # Reporte 2: Proveedores más frecuentes
 def proveedores_mas_frecuentes(self):
     conteo = {}
-    for compra in self.compras:
+    for compra in self:
         id_proveedor = compra.idProveedor
         if id_proveedor in conteo:
             conteo[id_proveedor] += 1
