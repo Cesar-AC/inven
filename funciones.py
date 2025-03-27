@@ -215,49 +215,137 @@ def mostrarP(xproductos, recargar):
                 st.session_state.id_eliminando = datos[0]
                 st.rerun()
 
+# def mostrarPv(xproveedores):
+#     cols = st.columns(4)
+#     valores = ["ID del Proveedor", "Nombre", "Contacto", "Dirección"]
+#     for col, val in zip(cols, valores):
+#         with col:
+#             st.write(val) 
+#     for proveedor in xproveedores:
+#         with st.container():
+#             cols = st.columns(4)
+#             valores = [proveedor.idProveedor, proveedor.nombre, proveedor.contacto, proveedor.direccion]
+#             for col, val in zip(cols, valores):
+#                 with col:
+#                     st.write(val)
 def mostrarPv(xproveedores):
-    cols = st.columns(4)
-    valores = ["ID del Proveedor", "Nombre", "Contacto", "Dirección"]
+    cols = st.columns(5)
+    valores = ["ID del Proveedor", "Nombre", "Contacto", "Dirección", "Opciones"]
+    
+    # Encabezados
     for col, val in zip(cols, valores):
-        with col:
-            st.write(val) 
+        col.write(f"**{val}**")
+    
+    # Iterar sobre los proveedores y mostrarlos en filas
     for proveedor in xproveedores:
-        with st.container():
-            cols = st.columns(4)
-            valores = [proveedor.idProveedor, proveedor.nombre, proveedor.contacto, proveedor.direccion]
-            for col, val in zip(cols, valores):
-                with col:
-                    st.write(val)
+        cols = st.columns(5)  # Nueva fila con 5 columnas
+        
+        # Mostrar datos del proveedor en las primeras 4 columnas
+        datos = [
+            proveedor.idProveedor, proveedor.nombre, proveedor.contacto, proveedor.direccion
+        ]
+        for col, val in zip(cols[:4], datos):
+            col.write(val)
+        
+        # Desplegable en la última columna
+        with cols[4]:
+            opcion = st.selectbox(
+                "", 
+                ["Elija", "Actualizar", "Eliminar"], 
+                key=f"opt_{proveedor.idProveedor}"
+            )
 
+
+
+# def mostrarV(xventas):
+#     cols = st.columns(5)    
+#     valores = ["ID de Venta", "ID del Producto", "ID del Cliente", "Fecha de Venta", "Cantidad"]
+#     for col, val in zip(cols, valores):
+#         with col:
+#             st.write(val)
+
+#     for venta in xventas:
+#         with st.container():
+#             cols = st.columns(5)
+#             valores = [venta.idVenta, venta.idProducto, venta.idCliente, venta.fechaDeVenta, venta.cantidad]
+#             for col, val in zip(cols, valores):
+#                 with col:
+#                     st.write(val)
 def mostrarV(xventas):
-    cols = st.columns(5)    
-    valores = ["ID de Venta", "ID del Producto", "ID del Cliente", "Fecha de Venta", "Cantidad"]
+    cols = st.columns(6)    
+    valores = ["ID de Venta", "ID del Producto", "ID del Cliente", "Fecha de Venta", "Cantidad", "Opciones"]
     for col, val in zip(cols, valores):
-        with col:
-            st.write(val)
+        col.write(f"**{val}**")
 
     for venta in xventas:
-        with st.container():
-            cols = st.columns(5)
-            valores = [venta.idVenta, venta.idProducto, venta.idCliente, venta.fechaDeVenta, venta.cantidad]
-            for col, val in zip(cols, valores):
-                with col:
-                    st.write(val)
+        cols = st.columns(6)  # Nueva fila con 6 columnas
+        
+        # Mostrar datos de la venta en las primeras 5 columnas
+        datos = [venta.idVenta, venta.idProducto, venta.idCliente, venta.fechaDeVenta, venta.cantidad]
+        for col, val in zip(cols[:5], datos):
+            col.write(val)
+        
+        # Desplegable en la última columna
+        with cols[5]:
+            opcion = st.selectbox(
+                "", 
+                ["Elija", "Actualizar", "Eliminar"], 
+                key=f"opt_{venta.idVenta}"
+            )
 
-def mostrarC(xcompras):
-    cols = st.columns(5)    
-    valores = ["ID de Compra", "ID del Producto", "ID del Proveedor", "Fecha de Venta", "Cantidad"]
+
+
+# def mostrarC(xcompras):
+#     cols = st.columns(5)    
+#     valores = ["ID de Compra", "ID del Producto", "ID del Proveedor", "Fecha de Venta", "Cantidad"]
+#     for col, val in zip(cols, valores):
+#         with col:
+#             st.write(val)
+
+#     for compra in xcompras:
+#         with st.container():
+#             cols = st.columns(5)
+#             valores = [compra.idCompra, compra.idProducto, compra.idProveedor, compra.fechaDeCompra, compra.cantidad]
+#             for col, val in zip(cols, valores):
+#                 with col:
+#                     st.write(val)
+def mostrarC(xcompras,):
+    if st.session_state.get("modo") == "editar":
+        actualizarC(st.session_state.get("id_editando"), recargar)
+        return
+    elif st.session_state.get("modo") == "eliminar":
+        eliminarC(st.session_state.get("id_eliminando"), recargar)
+        return
+
+    cols = st.columns(6)    
+    valores = ["ID de Compra", "ID del Producto", "ID del Proveedor", "Fecha de Compra", "Cantidad", "Opciones"]
     for col, val in zip(cols, valores):
-        with col:
-            st.write(val)
+        col.write(f"**{val}**")
 
     for compra in xcompras:
-        with st.container():
-            cols = st.columns(5)
-            valores = [compra.idCompra, compra.idProducto, compra.idProveedor, compra.fechaDeCompra, compra.cantidad]
-            for col, val in zip(cols, valores):
-                with col:
-                    st.write(val)
+        cols = st.columns(6)  # Nueva fila con 6 columnas
+        
+        # Mostrar datos de la compra en las primeras 5 columnas
+        datos = [compra.idCompra, compra.idProducto, compra.idProveedor, compra.fechaDeCompra, compra.cantidad]
+        for col, val in zip(cols[:5], datos):
+            col.write(val)
+        
+        # Desplegable en la última columna
+        with cols[5]:
+            opcion = st.selectbox(
+                "", 
+                ["Elija", "Actualizar", "Eliminar"], 
+                key=f"opt_{compra.idCompra}"
+            )
+            if opcion == "Actualizar":
+                st.session_state.modo = 'editar'
+                st.session_state.id_editando = datos[0]
+                st.rerun()
+            elif opcion == "Eliminar":
+                st.session_state.modo = 'eliminar'
+                st.session_state.id_eliminando = datos[0]
+                st.rerun()
+
 
 def filtrarProductos(xproductos):
     opcion = st.selectbox("🔎 Buscar productos por:", [
@@ -356,4 +444,66 @@ def eliminarP(id, recargar):
             st.rerun()
     if st.button("No"):
         st.session_state.modo = 'ver'
+        st.rerun()
+
+def eliminarC(id, recargar):
+    st.write(f"¿Seguro que deseas eliminar la compra con ID {id}?")
+    if st.button("Eliminar"):        
+        with open('compras.csv', 'r') as file:
+            lines = file.readlines()
+        
+        encabezado = lines[0]
+        compras_filtradas = []
+
+        for line in lines[1:]:
+            line_data = line.strip().split(',')
+            if line_data[0] != id:
+                compras_filtradas.append(line_data)
+        
+        contador_id = 1
+        for compra in compras_filtradas:
+            nuevo_id = "c" + str(contador_id).zfill(2)  # Formato c01, c02...
+            compra[0] = nuevo_id
+            contador_id += 1
+        
+        with open('compras.csv', 'w') as file:
+            file.write(encabezado)
+            for compra in compras_filtradas:
+                file.write(",".join(compra) + "\n")
+        
+        st.success("✅ Compra eliminada y IDs actualizados")
+        generateData('compras.csv', compras, Compra)
+        recargar()  # Recarga las compras en la interfaz
+        st.session_state.modo = 'ver'
+        time.sleep(1)
+        st.rerun()
+    # if st.button("No"):
+    #     st.session_state.modo = 'ver'
+    #     st.rerun()
+
+def actualizarC(id, recargar):
+    st.write("Ingrese los nuevos datos de la compra:")
+    cols = st.columns(2)
+    fecha = cols[0].text_input("Fecha de Compra")
+    cantidad = cols[1].text_input("Cantidad")
+
+    if st.button("Guardar"):
+        with open('compras.csv', 'r') as file:
+            lines = file.readlines()
+
+        with open('compras.csv', 'w') as file:
+            for line in lines:
+                line_data = line.strip().split(',')
+                if line_data[0] == id:  # Si el ID coincide, actualizar valores
+                    line_data[3] = fecha
+                    line_data[4] = cantidad
+                    file.write(",".join(line_data) + "\n")
+                else:
+                    file.write(line)
+        
+        st.success("✅ Datos actualizados")
+        generateData('compras.csv', compras, Compra)
+        recargar()  # Recarga el array de compras en la interfaz
+        st.session_state.modo = 'ver'
+        time.sleep(1)
         st.rerun()
