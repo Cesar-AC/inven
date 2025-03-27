@@ -314,6 +314,16 @@ def mostrarV(xventas):
                 ["Elija", "Actualizar", "Eliminar"], 
                 key=f"opt_{venta.idVenta}"
             )
+        
+        # Ejecutar acción según la selección
+            if opcion == "Actualizar":
+                st.session_state.modo = 'editar'
+                st.session_state.id_editando = datos[0]
+                st.rerun()
+            elif opcion == "Eliminar":
+                st.session_state.modo = 'eliminar'
+                st.session_state.id_eliminando = datos[0]
+                st.rerun()
 
 def mostrarC(xcompras,):
     if st.session_state.get("modo") == "editar":
@@ -343,6 +353,8 @@ def mostrarC(xcompras,):
                 ["Elija", "Actualizar", "Eliminar"], 
                 key=f"opt_{compra.idCompra}"
             )
+        
+        # Ejecutar acción según la selección
             if opcion == "Actualizar":
                 st.session_state.modo = 'editar'
                 st.session_state.id_editando = datos[0]
@@ -471,8 +483,8 @@ def actualizarC(id, recargar):
                 if line_data[0] == id:  #Si el ID coincide, verifica que la línea no esté vacía y la actualiza
                     if idProducto.strip(): line_data[1] = idProducto
                     if idProveedor.strip(): line_data[2] = idProveedor
-                    if fecha.strip(): line_data[2] = fecha
-                    if cantidad.strip(): line_data[2] = cantidad
+                    if fecha.strip(): line_data[3] = fecha
+                    if cantidad.strip(): line_data[4] = cantidad
                     file.write(",".join(line_data) + "\n")
                 else:
                     file.write(line)
@@ -504,8 +516,8 @@ def actualizarV(id, recargar):
                 if line_data[0] == id:  #Si el ID coincide, verifica que la línea no esté vacía y la actualiza
                     if idProducto.strip(): line_data[1] = idProducto
                     if idCliente.strip(): line_data[2] = idCliente
-                    if fecha.strip(): line_data[2] = fecha
-                    if cantidad.strip(): line_data[2] = cantidad
+                    if fecha.strip(): line_data[3] = fecha
+                    if cantidad.strip(): line_data[4] = cantidad
                     file.write(",".join(line_data) + "\n")
                 else:
                     file.write(line)
@@ -542,7 +554,7 @@ def eliminarP(id, recargar):
                 for producto in productos_filtrados:
                     file.write(",".join(producto) + "\n")
             
-            st.success("✅ Producto eliminado y IDs actualizados")
+            st.success("✅ Producto eliminado e IDs actualizados")
             generateData('productos.csv', productos, Producto)
             recargar()  # Recarga los productos en la interfaz
             st.session_state.modo = 'ver'
@@ -577,7 +589,7 @@ def eliminarPv(id, recargar):
             for proveedor in proveedoresFiltrados:
                 file.write(",".join(proveedor) + "\n")
         
-        st.success("✅ Proveedor eliminado y IDs actualizados")
+        st.success("✅ Proveedor eliminado e IDs actualizados")
         generateData('proveedores.csv', proveedores, Proveedor)
         recargar()  # Recarga los proveedores en la interfaz
         st.session_state.modo = 'ver'
@@ -603,7 +615,7 @@ def eliminarC(id, recargar):
         
         contador_id = 1
         for compra in compras_filtradas:
-            nuevo_id = "c" + str(contador_id).zfill(2)  # Formato c01, c02...
+            nuevo_id = "c" + str(contador_id).zfill(3)
             compra[0] = nuevo_id
             contador_id += 1
         
@@ -612,13 +624,48 @@ def eliminarC(id, recargar):
             for compra in compras_filtradas:
                 file.write(",".join(compra) + "\n")
         
-        st.success("✅ Compra eliminada y IDs actualizados")
+        st.success("✅ Compra eliminada e IDs actualizados")
         generateData('compras.csv', compras, Compra)
         recargar()  # Recarga las compras en la interfaz
         st.session_state.modo = 'ver'
         time.sleep(1)
         st.rerun()
-    # if st.button("No"):
-    #     st.session_state.modo = 'ver'
-    #     st.rerun()
+    elif st.button("No"):
+        st.session_state.modo = 'ver'
+        st.rerun()
 
+def eliminarV(id, recargar):
+    st.write(f"¿Seguro que deseas eliminar la venta con ID {id}?")
+    if st.button("Eliminar"):        
+        with open('ventas.csv', 'r') as file:
+            lines = file.readlines()
+        
+        encabezado = lines[0]
+        ventasFiltradas = []
+
+        for line in lines[1:]:
+            line_data = line.strip().split(',')
+            if line_data[0] != id:
+                ventasFiltradas.append(line_data)
+        
+        contador_id = 1
+
+        for venta in ventasFiltradas:
+            nuevo_id = "c" + str(contador_id).zfill(3)
+            venta[0] = nuevo_id
+            contador_id += 1
+        
+        with open('ventas.csv', 'w') as file:
+            file.write(encabezado)
+            for venta in ventasFiltradas:
+                file.write(",".join(venta) + "\n")
+        
+        st.success("✅ Venta eliminada e IDs actualizados")
+        generateData('ventas.csv', ventas, Venta)
+        recargar()  # Recarga las compras en la interfaz
+        st.session_state.modo = 'ver'
+        time.sleep(1)
+        st.rerun()
+    elif st.button("No"):
+        st.session_state.modo = 'ver'
+        st.rerun()
