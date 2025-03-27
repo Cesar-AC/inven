@@ -1,5 +1,5 @@
 #Importamos las clases
-from clases import Producto, Proveedor, Venta, Compra
+from clases import *
 
 #listas con datos predeterminados 
 productos = [ 

@@ -68,7 +68,7 @@ class dashboard:
     def showProductos(self):
         st.title("📦 Productos")
         if 'modo' not in st.session_state:
-            st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar', 'filtrar'
+            st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar', 'filtrar', 'editar' y 'eliminar'
         
         # Creamos contenedores vacíos para header y botones
         col1, col2 = st.columns(2)
@@ -110,7 +110,7 @@ class dashboard:
         
         # Contenido dinámico
         if st.session_state.modo == 'ver':
-            mostrarP(st.session_state["productos"], self.recargar_productos)
+            mostrarP(st.session_state["productos"])
         elif st.session_state.modo == 'agregar':
             addProducto(self.recargar_productos)
         elif st.session_state.modo == 'filtrar':
@@ -155,6 +155,10 @@ class dashboard:
             mostrarPv(st.session_state["proveedores"])
         elif st.session_state.modo == 'agregar':
             addProveedor(self.recargar_proveedores)
+        elif st.session_state.modo == 'editar':
+            actualizarPv(st.session_state.id_editando, self.recargar_proveedores)
+        elif st.session_state.modo == 'eliminar':
+            eliminarPv(st.session_state.id_eliminando, self.recargar_proveedores)
 
     def showVentas(self):
         st.title("💰 Ventas")
