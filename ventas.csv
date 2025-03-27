@@ -1,5 +1,5 @@
 ID de Venta, ID del Producto, ID del Cliente, Fecha de Venta, Cantidad
-c001,prod002,cliente02,2025-03-21,2
+c001,prod002,cliente08,2025-03-21,5678
 c002,prod005,cliente03,2025-03-22,3
 c003,prod007,cliente04,2025-03-23,1
 c004,prod008,cliente10,2025-03-23,2

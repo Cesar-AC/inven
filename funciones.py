@@ -162,7 +162,6 @@ def addVenta(recargar, recargarP):
         st.session_state.modo = 'ver'
         time.sleep(1)
         st.rerun()
-
 #Función añadir compra
 def addCompra(recargar, recargarP):
     st.write("Ingrese los datos de la compra:")
@@ -407,7 +406,11 @@ def actualizarP(id, recargar):
     st.write("Si el dato no necesita ser cambiado, dejeló vacío.")
     cols = st.columns(5)
     Nombre = cols[0].text_input("Nombre")
-    Categoria = cols[1].text_input("Categoria")
+    categorias = ["Belleza", "Tecnología", "Alimentos", "Ropa y Calzado", "Electrónica", "Hogar", "Deportes", "Juguetes"]
+    Categoria = cols[1].selectbox(
+            "",
+            options=["Categoria"] + [categoria for categoria in categorias]
+        )
     Precio = cols[2].text_input("Precio")
     Stock = cols[3].text_input("Stock")
     Descripcion = cols[4].text_input("Descripción")
@@ -467,12 +470,16 @@ def actualizarPv(id, recargar):
 def actualizarC(id, recargar):
     st.subheader("Ingrese los nuevos datos de la compra:")
     st.write("Si el dato no necesita ser cambiado, dejeló vacío.")
-    cols = st.columns(4)
-    idProducto = cols[0].text_input("ID del producto")
-    idProveedor = cols[1].text_input("ID del proveedor")
-    fecha = cols[2].text_input("Fecha de compra")
-    cantidad = cols[3].text_input("Cantidad")
-
+    cols = st.columns(3)
+    idProducto = cols[0].selectbox(
+            "",
+            options=["ID del Producto"] + [producto.idProducto for producto in productos]
+        )
+    idProveedor = cols[1].selectbox(
+            "",
+            options=["ID del Proveedor"] + [proveedor.idProveedor for proveedor in proveedores]
+        )
+    cantidad = cols[2].text_input("Cantidad")
     if st.button("Guardar"):
         with open('compras.csv', 'r') as file:
             lines = file.readlines()
@@ -483,7 +490,6 @@ def actualizarC(id, recargar):
                 if line_data[0] == id:  #Si el ID coincide, verifica que la línea no esté vacía y la actualiza
                     if idProducto.strip(): line_data[1] = idProducto
                     if idProveedor.strip(): line_data[2] = idProveedor
-                    if fecha.strip(): line_data[3] = fecha
                     if cantidad.strip(): line_data[4] = cantidad
                     file.write(",".join(line_data) + "\n")
                 else:
@@ -500,11 +506,13 @@ def actualizarV(id, recargar):
     #ID de Venta, ID del Producto, ID del Cliente, Fecha de Venta, Cantidad
     st.subheader("Ingrese los nuevos datos de la venta:")
     st.write("Si el dato no necesita ser cambiado, dejeló vacío.")
-    cols = st.columns(4)
-    idProducto = cols[0].text_input("ID del producto")
-    idCliente = cols[1].text_input("ID del cliente")
-    fecha = cols[2].text_input("Fecha de venta")
-    cantidad = cols[3].text_input("Cantidad")
+    cols = st.columns(3)
+    idProducto = cols[0].selectbox(
+            "",
+            options=["ID del Producto"] + [producto.idProducto for producto in productos]
+        )
+    idCliente = cols[1].text_input("ID del cliente (ejemplo: cliente01)")
+    cantidad = cols[2].text_input("Cantidad")
 
     if st.button("Guardar"):
         with open('ventas.csv', 'r') as file:
@@ -516,7 +524,6 @@ def actualizarV(id, recargar):
                 if line_data[0] == id:  #Si el ID coincide, verifica que la línea no esté vacía y la actualiza
                     if idProducto.strip(): line_data[1] = idProducto
                     if idCliente.strip(): line_data[2] = idCliente
-                    if fecha.strip(): line_data[3] = fecha
                     if cantidad.strip(): line_data[4] = cantidad
                     file.write(",".join(line_data) + "\n")
                 else:
