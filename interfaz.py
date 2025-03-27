@@ -245,14 +245,45 @@ class dashboard:
         st.subheader("Estás viendo los reportes")
 
         opcion = st.selectbox("📌 Elige un reporte:", [
+            "Seleccione una opción",
             "Productos con menor stock",
             "Proveedores más frecuentes",
             "Ventas por período de tiempo",
             "Productos más vendidos"
-        ])  
+        ]) 
+
         if opcion == "Productos con menor stock":
-            menor_stock = producto_menor_stock(self)
-            st.write("📉 **Producto con menor stock:**", menor_stock)
+            with open("productos.csv", "r", encoding="utf-8") as archivo:
+                lineas = archivo.readlines()[1:]  # Omitir encabezado
+
+            productos_bajo_stock = []
+
+            for linea in lineas:
+                datos = linea.strip().split(",")  # Separar los valores por coma
+                id_producto, nombre, categoria, precio, stock, descripcion = datos
+                stock = int(stock)  # Convertir el stock a número
+
+                if stock <= 20:  # Filtrar productos con stock menor o igual a 20
+                    productos_bajo_stock.append([id_producto, nombre, categoria, precio, stock, descripcion])
+
+            st.write("📉 **Productos con stock menor o igual a 20:**")
+
+            if productos_bajo_stock:
+                # Crear columnas para los encabezados
+                cols = st.columns(6)
+                encabezados = ["ID Producto", "Nombre", "Categoría", "Precio", "Stock", "Descripción"]
+
+                for col, titulo in zip(cols, encabezados):
+                    col.write(f"**{titulo}**")  # Encabezados en negrita
+
+                # Mostrar productos en filas
+                for producto in productos_bajo_stock:
+                    cols = st.columns(6)
+                    for col, dato in zip(cols, producto):
+                        col.write(dato)
+
+            else:
+                st.write("✅ Todos los productos tienen un stock mayor a 20.")
 
         elif opcion == "Proveedores más frecuentes":
             proveedores = proveedores_mas_frecuentes(st.session_state["compras"])
@@ -285,7 +316,29 @@ class dashboard:
                 st.write("❌ No hay ventas en el período seleccionado.")
 
         elif opcion == "Productos más vendidos":
-            mas_vendidos = productos_mas_vendidos()
-            st.write("🔥 **Productos más vendidos:**")
-            for producto in mas_vendidos:
-               st.write(f"- Producto {producto[0]}: {producto[1]} unidades vendidas")
+            st.write("🔥 **Productos más vendidos (4+ unidades):**")
+
+            conteo_ventas = {}
+
+            # Leer el archivo línea por línea
+            with open("ventas.csv", "r") as archivo:
+                next(archivo) 
+                for linea in archivo:
+                    datos = linea.strip().split(",")  # Separar por comas
+                    producto_id = datos[1]  # ID del producto
+                    cantidad = int(datos[4])  # Cantidad vendida
+
+                    # Contar la cantidad vendida por producto
+                    if producto_id in conteo_ventas:
+                        conteo_ventas[producto_id] += cantidad
+                    else:
+                        conteo_ventas[producto_id] = cantidad
+
+            productos_filtrados = [(producto, cantidad) for producto, cantidad in conteo_ventas.items() if cantidad >= 4]
+
+            # Mostrar resultados
+            if productos_filtrados:
+                for producto in productos_filtrados:
+                    st.write(f"- Producto {producto[0]}: {producto[1]} unidades vendidas")
+            else:
+                st.write("❌ No hay productos con 4 o más unidades vendidas.")
