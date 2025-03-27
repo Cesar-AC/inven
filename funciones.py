@@ -110,19 +110,48 @@ def addProveedor(recargar):
         time.sleep(1)
         st.rerun()
 
+def actualizarStock(id, cantidad, recargar):
+    with open('productos.csv', 'r') as file:
+        lines = file.readlines()
+    with open('productos.csv', 'w') as file:
+        for line in lines:
+            line_data = line.strip().split(',')
+            if line_data[0] == id:
+                line_data[4] = str(int(line_data[4]) + int(cantidad))
+                file.write(",".join(line_data) + "\n")
+            else:
+                file.write(line)
+    generateData('productos.csv', productos, Producto)
+    recargar()
+
+def validarStock(id, cantidad):
+    for producto in productos:
+        if producto.idProducto == id:
+            if int(producto.stock) < cantidad:
+                return int(producto.stock)
+    return True
+
 #Funcion añadir venta
-def addVenta(recargar):
+def addVenta(recargar, recargarP):
     st.write("Ingrese los datos de la venta:")
     cols = st.columns(3)
-    idProducto = cols[0].text_input("ID del Producto")
-    idCliente = cols[1].text_input("ID del cliente")
+    idProducto = cols[0].selectbox(
+            "",
+            options=["ID del Producto"] + [producto.idProducto for producto in productos]
+        )
+    idCliente = cols[1].text_input("ID del cliente: (ejemplo: cliente01)")
     cantidad = cols[2].text_input("Cantidad")
     fecha = datetime.now().strftime("%d-%m-%Y")
 
     if st.button("Guardar"):
+        stock = validarStock(idProducto, int(cantidad))
+        if type(stock) == int:
+            st.error(f"❌ No hay suficiente stock, solo hay: {stock}")
+            return
         id = buscarNextIDV()  # o como estés generando los IDs
         with open('ventas.csv', 'a') as file:
-            file.write(f"{id},{idCliente},{idProducto},{fecha},{cantidad}\n")
+            file.write(f"{id},{idProducto},{idCliente},{fecha},{cantidad}\n")
+        actualizarStock(idProducto, -int(cantidad), recargarP)
         st.success("✅ Datos guardados")
         generateData('ventas.csv', ventas, Venta)
         recargar()  # recarga el array de las ventas en la interfaz
@@ -130,11 +159,11 @@ def addVenta(recargar):
         time.sleep(1)
         st.rerun()
 
-def addCompra(recargar):
+def addCompra(recargar, recargarP):
     st.write("Ingrese los datos de la compra:")
     cols = st.columns(3)
-    idProducto = cols[0].text_input("ID del Producto")
-    idProveedor = cols[1].text_input("ID del Proveedor")
+    idProducto = cols[0].text_input("ID del Producto (ejemplo: prod001)")
+    idProveedor = cols[1].text_input("ID del Proveedor (ejemplo: p01)")
     cantidad = cols[2].text_input("Cantidad")
     fecha = datetime.now().strftime("%d-%m-%Y")
 
@@ -142,6 +171,7 @@ def addCompra(recargar):
         id = buscarNextIDC()  # o como estés generando los IDs
         with open('compras.csv', 'a') as file:
             file.write(f"{id},{idProducto},{idProveedor},{fecha},{cantidad}\n")
+        actualizarStock(idProducto, cantidad, recargarP)
         st.success("✅ Datos guardados")
         generateData('compras.csv', compras, Compra)
         recargar()  # recarga el array de las ventas en la interfaz
@@ -215,19 +245,6 @@ def mostrarP(xproductos, recargar):
                 st.session_state.id_eliminando = datos[0]
                 st.rerun()
 
-# def mostrarPv(xproveedores):
-#     cols = st.columns(4)
-#     valores = ["ID del Proveedor", "Nombre", "Contacto", "Dirección"]
-#     for col, val in zip(cols, valores):
-#         with col:
-#             st.write(val) 
-#     for proveedor in xproveedores:
-#         with st.container():
-#             cols = st.columns(4)
-#             valores = [proveedor.idProveedor, proveedor.nombre, proveedor.contacto, proveedor.direccion]
-#             for col, val in zip(cols, valores):
-#                 with col:
-#                     st.write(val)
 def mostrarPv(xproveedores):
     cols = st.columns(5)
     valores = ["ID del Proveedor", "Nombre", "Contacto", "Dirección", "Opciones"]
@@ -255,22 +272,6 @@ def mostrarPv(xproveedores):
                 key=f"opt_{proveedor.idProveedor}"
             )
 
-
-
-# def mostrarV(xventas):
-#     cols = st.columns(5)    
-#     valores = ["ID de Venta", "ID del Producto", "ID del Cliente", "Fecha de Venta", "Cantidad"]
-#     for col, val in zip(cols, valores):
-#         with col:
-#             st.write(val)
-
-#     for venta in xventas:
-#         with st.container():
-#             cols = st.columns(5)
-#             valores = [venta.idVenta, venta.idProducto, venta.idCliente, venta.fechaDeVenta, venta.cantidad]
-#             for col, val in zip(cols, valores):
-#                 with col:
-#                     st.write(val)
 def mostrarV(xventas):
     cols = st.columns(6)    
     valores = ["ID de Venta", "ID del Producto", "ID del Cliente", "Fecha de Venta", "Cantidad", "Opciones"]
@@ -293,22 +294,6 @@ def mostrarV(xventas):
                 key=f"opt_{venta.idVenta}"
             )
 
-
-
-# def mostrarC(xcompras):
-#     cols = st.columns(5)    
-#     valores = ["ID de Compra", "ID del Producto", "ID del Proveedor", "Fecha de Venta", "Cantidad"]
-#     for col, val in zip(cols, valores):
-#         with col:
-#             st.write(val)
-
-#     for compra in xcompras:
-#         with st.container():
-#             cols = st.columns(5)
-#             valores = [compra.idCompra, compra.idProducto, compra.idProveedor, compra.fechaDeCompra, compra.cantidad]
-#             for col, val in zip(cols, valores):
-#                 with col:
-#                     st.write(val)
 def mostrarC(xcompras,):
     if st.session_state.get("modo") == "editar":
         actualizarC(st.session_state.get("id_editando"), recargar)
@@ -345,7 +330,6 @@ def mostrarC(xcompras,):
                 st.session_state.modo = 'eliminar'
                 st.session_state.id_eliminando = datos[0]
                 st.rerun()
-
 
 def filtrarProductos(xproductos):
     opcion = st.selectbox("🔎 Buscar productos por:", [

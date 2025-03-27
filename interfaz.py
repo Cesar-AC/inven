@@ -190,25 +190,9 @@ class dashboard:
         if st.session_state.modo == 'ver':
             mostrarV(st.session_state["ventas"])
         elif st.session_state.modo == 'agregar':
-            addVenta(self.recargar_ventas)
+            addVenta(self.recargar_ventas, self.recargar_productos)
             
     def showCompras(self):
-        # st.title("🛒 Compras")
-        # st.subheader("Estás viendo las compras")
-        
-        # cols = st.columns(5)
-        # valores = ["ID de Compra", "ID del Producto", "ID del Proveedor", "Fecha de Compra", "Cantidad"]
-        # for col, val in zip(cols, valores):
-        #     with col:
-        #         st.write(val)
-                
-        # for compra in self.compras:
-        #     with st.container():
-        #         cols = st.columns(5)
-        #         valores = [compra.idCompra, compra.idProducto, compra.idProveedor, compra.fechaDeCompra, compra.cantidad]
-        #         for col, val in zip(cols, valores):
-        #             with col:
-        #                 st.write(val)
         st.title("🛒 Compras")
         if 'modo' not in st.session_state:
             st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar'
@@ -242,7 +226,7 @@ class dashboard:
         if st.session_state.modo == 'ver':
             mostrarC(st.session_state["compras"])
         elif st.session_state.modo == 'agregar':
-            addCompra(self.recargar_compras)
+            addCompra(self.recargar_compras, self.recargar_productos)
                         
     def reportes(self):
         st.title("📑 Reportes")
