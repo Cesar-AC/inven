@@ -19,7 +19,6 @@ productos = [
     Producto("prod014","Pesa Rusa 10kg","Deportes","40","15","Ideal para entrenamiento funcional"),
     Producto("prod015","Juguete Educativo","Juguetes","20","50","Juego didáctico para niños"),
     Producto("prod016","Carro de Control Remoto","Juguetes","50","20","Alcance de hasta 20 metros")
-
 ]
 
 proveedores = [
@@ -29,7 +28,6 @@ proveedores = [
     Proveedor("p04","Innovatech Solutions","3229874561","Calle 100 #25-30 Barranquilla"),
     Proveedor("p05","Alimentos del Valle","3112345678","Avenida Central #5-67 Bucaramanga"),
     Proveedor("p06","Hogar y Estilo S.A.","3187654321","Calle 45 #10-15 Cartagena")
-
 ]
 
 ventas = [
@@ -42,8 +40,7 @@ ventas = [
     Venta("v07","prod010","cliente05","2025-03-24","4"),
     Venta("v08","prod012","cliente06","2025-03-25","2"),
     Venta("v09","prod016","cliente08","2025-03-25","3"),
-    Venta("v10","prod014","cliente07","2025-03-26","6"),
-
+    Venta("v10","prod014","cliente07","2025-03-26","6")
 ]
 
 compras = [
@@ -56,8 +53,7 @@ compras = [
     Compra("c07","prod010","p06","2025-01-30","40"),
     Compra("c08","prod012","p05","2025-02-22","5"),
     Compra("c09","prod016","p01","2025-03-12","25"),
-    Compra("c10","prod014","p03","2025-01-15","35"),
-
+    Compra("c10","prod014","p03","2025-01-15","35")
 ]
 
 productosFile = 'productos.csv'

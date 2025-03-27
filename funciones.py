@@ -1,5 +1,3 @@
-import re
-from matplotlib import lines
 import streamlit as st
 import time
 from unidecode import unidecode
@@ -213,7 +211,9 @@ def mostrarP(xproductos, recargar):
                 st.session_state.id_editando = datos[0]
                 st.rerun()
             elif opcion == "Eliminar":
-                eliminarP(datos[0], recargar)
+                st.session_state.modo = 'eliminar'
+                st.session_state.id_eliminando = datos[0]
+                st.rerun()
 
 def mostrarPv(xproveedores):
     cols = st.columns(4)
@@ -326,31 +326,34 @@ def actualizarP(id, recargar):
 def eliminarP(id, recargar):
     st.write(f"¿Seguro que deseas eliminar el producto con ID {id}?")
     if st.button("Eliminar"):        
-        with open('productos.csv', 'r') as file:
-            lines = file.readlines()
-        
-        encabezado = lines[0]
-        productos_filtrados = []
+            with open('productos.csv', 'r') as file:
+                lines = file.readlines()
+            
+            encabezado = lines[0]
+            productos_filtrados = []
 
-        for line in lines [1:]:
-            line_data = line.strip().split(',')
-            if line_data[0] != id:
-                productos_filtrados.append(line_data)
-        
-        contador_id = 1
-        for producto in productos_filtrados:
-            nuevo_id = "prod" + ("00" + str(contador_id))[-3:]  # Formato prod001, prod002...
-            producto[0] = nuevo_id
-            contador_id += 1
-        
-        with open('productos.csv', 'w') as file:
-            file.write(encabezado)
+            for line in lines [1:]:
+                line_data = line.strip().split(',')
+                if line_data[0] != id:
+                    productos_filtrados.append(line_data)
+            
+            contador_id = 1
             for producto in productos_filtrados:
-                file.write(",".join(producto) + "\n")
-        
-        st.success("✅ Producto eliminado y IDs actualizados")
-        generateData('productos.csv', productos, Producto)
-        recargar()  # Recarga los productos en la interfaz
+                nuevo_id = "prod" + ("00" + str(contador_id))[-3:]  # Formato prod001, prod002...
+                producto[0] = nuevo_id
+                contador_id += 1
+            
+            with open('productos.csv', 'w') as file:
+                file.write(encabezado)
+                for producto in productos_filtrados:
+                    file.write(",".join(producto) + "\n")
+            
+            st.success("✅ Producto eliminado y IDs actualizados")
+            generateData('productos.csv', productos, Producto)
+            recargar()  # Recarga los productos en la interfaz
+            st.session_state.modo = 'ver'
+            time.sleep(1)
+            st.rerun()
+    if st.button("No"):
         st.session_state.modo = 'ver'
-        time.sleep(1)
         st.rerun()

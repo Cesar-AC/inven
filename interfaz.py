@@ -1,6 +1,5 @@
 #Importamos la librería streamlit junto a los datos iniciales
 import streamlit as st
-from init import compras
 from funciones import *
 #Esta clase contiene/actúa como la interfaz
 class dashboard:
@@ -16,7 +15,6 @@ class dashboard:
             self.recargar_proveedores()
         if "ventas" not in st.session_state:
             self.recargar_ventas()
-        self.compras = compras
         if "compras" not in st.session_state:
             self.recargar_compras()
         
@@ -119,6 +117,8 @@ class dashboard:
             filtrarProductos(st.session_state["productos"])
         elif st.session_state.modo == 'editar':
             actualizarP(st.session_state.id_editando, self.recargar_productos)
+        elif st.session_state.modo == 'eliminar':
+            eliminarP(st.session_state.id_eliminando, self.recargar_productos)
 
     def showProveedores(self):
         st.title("🚚 Proveedores")
