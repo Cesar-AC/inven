@@ -1,6 +1,7 @@
 #Importamos la librería streamlit junto a los datos iniciales
 import streamlit as st
 from funciones import *
+
 #Esta clase contiene/actúa como la interfaz
 class dashboard:
     
@@ -110,7 +111,14 @@ class dashboard:
         
         # Contenido dinámico
         if st.session_state.modo == 'ver':
-            mostrarP(st.session_state["productos"])
+            mostrarDatos(
+                productos, 
+                ["ID del Producto", "Nombre", "Categoría", "Precio", "Stock", "Descripción", "Opciones"],
+                ["idProducto", "nombre", "categoria", "precio", "stock", "descripcion"],
+                "prod",
+                actualizarP,
+                eliminarP
+            )
         elif st.session_state.modo == 'agregar':
             addProducto(self.recargar_productos)
         elif st.session_state.modo == 'filtrar':
@@ -152,7 +160,14 @@ class dashboard:
         
         # Contenido dinámico
         if st.session_state.modo == 'ver':
-            mostrarPv(st.session_state["proveedores"])
+            mostrarDatos(
+                proveedores, 
+                ["ID del Proveedor", "Nombre", "Contacto", "Dirección", "Opciones"],
+                ["idProveedor", "nombre", "contacto", "direccion"],
+                "p",
+                actualizarPv,
+                eliminarPv
+            )
         elif st.session_state.modo == 'agregar':
             addProveedor(self.recargar_proveedores)
         elif st.session_state.modo == 'editar':
@@ -192,7 +207,14 @@ class dashboard:
         
         # Contenido dinámico
         if st.session_state.modo == 'ver':
-            mostrarV(st.session_state["ventas"])
+            mostrarDatos(
+                ventas, 
+                ["ID de Venta", "ID del Producto", "ID del Cliente", "Fecha de Venta", "Cantidad", "Opciones"],
+                ["idVenta", "idProducto", "idCliente", "fechaDeVenta", "cantidad"],
+                "v",
+                actualizarV,
+                eliminarV
+            )
         elif st.session_state.modo == 'agregar':
             addVenta(self.recargar_ventas, self.recargar_productos)
         elif st.session_state.modo == 'editar':
@@ -232,7 +254,14 @@ class dashboard:
         
         # Contenido dinámico
         if st.session_state.modo == 'ver':
-            mostrarC(st.session_state["compras"])
+            mostrarDatos(
+                compras, 
+                ["ID de Compra", "ID del Producto", "ID del Proveedor", "Fecha de Compra", "Cantidad", "Opciones"],
+                ["idCompra", "idProducto", "idProveedor", "fechaDeCompra", "cantidad"],
+                "c",
+                actualizarC,
+                eliminarC
+            )
         elif st.session_state.modo == 'agregar':
             addCompra(self.recargar_compras, self.recargar_productos)
         elif st.session_state.modo == 'editar':
