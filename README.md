@@ -24,4 +24,4 @@ Una vez dentro del Codespace, sigue estos pasos:
 1. **Abrir la terminal en Codespaces**.  
 2. **Instalar las dependencias** con el siguiente comando:  
    ```bash
-   pip install -r requirements.txt
+   pip install streamlit unidecode
