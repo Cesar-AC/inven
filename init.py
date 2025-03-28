@@ -22,38 +22,38 @@ productos = [
 ]
 
 proveedores = [
-    Proveedor("p01","Luxe Supplies Corp.","3204567890","Avenida El Poblado #45-123 Medellín"),
-    Proveedor("p02","Elite Global Traders","3106543210","Calle 93A #12-45 Bogotá"),
-    Proveedor("p03","Distribuidora Andes","3157896543","Carrera 50 #30-20 Cali"),
-    Proveedor("p04","Innovatech Solutions","3229874561","Calle 100 #25-30 Barranquilla"),
-    Proveedor("p05","Alimentos del Valle","3112345678","Avenida Central #5-67 Bucaramanga"),
-    Proveedor("p06","Hogar y Estilo S.A.","3187654321","Calle 45 #10-15 Cartagena")
+    Proveedor("p001","Luxe Supplies Corp.","3204567890","Avenida El Poblado #45-123 Medellín"),
+    Proveedor("p002","Elite Global Traders","3106543210","Calle 93A #12-45 Bogotá"),
+    Proveedor("p003","Distribuidora Andes","3157896543","Carrera 50 #30-20 Cali"),
+    Proveedor("p004","Innovatech Solutions","3229874561","Calle 100 #25-30 Barranquilla"),
+    Proveedor("p005","Alimentos del Valle","3112345678","Avenida Central #5-67 Bucaramanga"),
+    Proveedor("p006","Hogar y Estilo S.A.","3187654321","Calle 45 #10-15 Cartagena")
 ]
 
 ventas = [
-    Venta("v01","prod001","cliente01","2025-03-20","5"),
-    Venta("v02","prod002","cliente02","2025-03-21","2"),
-    Venta("v03","prod005","cliente03","2025-03-22","3"),
-    Venta("v04","prod007","cliente04","2025-03-23","1"),
-    Venta("v05","prod008","cliente10","2025-03-23","2"),
-    Venta("v06","prod003","cliente09","2025-03-24","1"),
-    Venta("v07","prod010","cliente05","2025-03-24","4"),
-    Venta("v08","prod012","cliente06","2025-03-25","2"),
-    Venta("v09","prod016","cliente08","2025-03-25","3"),
-    Venta("v10","prod014","cliente07","2025-03-26","6")
+    Venta("v001","prod001","cliente01","2025-03-20","5"),
+    Venta("v002","prod002","cliente02","2025-03-21","2"),
+    Venta("v003","prod005","cliente03","2025-03-22","3"),
+    Venta("v004","prod007","cliente04","2025-03-23","1"),
+    Venta("v005","prod008","cliente10","2025-03-23","2"),
+    Venta("v006","prod003","cliente09","2025-03-24","1"),
+    Venta("v007","prod010","cliente05","2025-03-24","4"),
+    Venta("v008","prod012","cliente06","2025-03-25","2"),
+    Venta("v009","prod016","cliente08","2025-03-25","3"),
+    Venta("v010","prod014","cliente07","2025-03-26","6")
 ]
 
 compras = [
-    Compra("c01","prod001","p01","2025-03-15","50"),
-    Compra("c02","prod002","p02","2025-03-16","30"),
-    Compra("c03","prod005","p05","2025-02-10","100"),
-    Compra("c04","prod007","p03","2025-01-25","20"),
-    Compra("c05","prod008","p04","2025-03-05","15"),
-    Compra("c06","prod003","p02","2025-02-18","10"),
-    Compra("c07","prod010","p06","2025-01-30","40"),
-    Compra("c08","prod012","p05","2025-02-22","5"),
-    Compra("c09","prod016","p01","2025-03-12","25"),
-    Compra("c10","prod014","p03","2025-01-15","35")
+    Compra("c001","prod001","p01","2025-03-15","50"),
+    Compra("c002","prod002","p02","2025-03-16","30"),
+    Compra("c003","prod005","p05","2025-02-10","100"),
+    Compra("c004","prod007","p03","2025-01-25","20"),
+    Compra("c005","prod008","p04","2025-03-05","15"),
+    Compra("c006","prod003","p02","2025-02-18","10"),
+    Compra("c007","prod010","p06","2025-01-30","40"),
+    Compra("c008","prod012","p05","2025-02-22","5"),
+    Compra("c009","prod016","p01","2025-03-12","25"),
+    Compra("c010","prod014","p03","2025-01-15","35")
 ]
 
 productosFile = 'productos.csv'
