@@ -68,6 +68,12 @@ def productos_mas_vendidos():
 
     return lista_ordenada
 
+def validarTexto(input, mensaje):
+    if input.strip() == "":
+        st.error(f"❌ {mensaje} no puede estar vacío")
+        return False
+    return True
+
 #Funcion añadir producto
 def addProducto(recargar):
     st.write("Ingrese los datos del nuevo producto:")
@@ -85,7 +91,9 @@ def addProducto(recargar):
     desc = cols[1].text_input("Descripción")
 
     if st.button("Guardar"):
-        id = buscarNextID(productos, "prod")  # o como estés generando los IDs
+        id = buscarNextID(productos, "prod")
+        if not validarTexto(nombre, "El nombre") or not validarTexto(desc, "La descripción"):
+            return   # o como estés generando los IDs
         with open('productos.csv', 'a') as file:
             file.write(f"{id},{nombre},{categoria},{precio},{stock},{desc}\n")
         st.success("✅ Datos guardados")
@@ -94,6 +102,12 @@ def addProducto(recargar):
         st.session_state.modo = 'ver'
         time.sleep(1)
         st.rerun()
+
+def validarContacto(input):
+    if not input.isdigit() and not("@" in input):
+        st.error(f"❌ Contacto debe ser un número o un email")
+        return False
+    return True
 
 #Funcion añadir proveedor
 def addProveedor(recargar):
@@ -104,6 +118,8 @@ def addProveedor(recargar):
     direccion = cols[2].text_input("Dirección")
 
     if st.button("Guardar"):
+        if not validarTexto(nombre, "El nombre") or not validarContacto(contacto):
+            return
         id = buscarNextID(proveedores, "p")  # o como estés generando los IDs
         with open('proveedores.csv', 'a') as file:
             file.write(f"{id},{nombre},{contacto},{direccion}\n")
