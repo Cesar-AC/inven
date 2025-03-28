@@ -314,11 +314,51 @@ class dashboard:
             else:
                 st.write("✅ Todos los productos tienen un stock mayor a 20.")
 
+        
         elif opcion == "Proveedores más frecuentes":
-            proveedores = proveedores_mas_frecuentes(st.session_state["compras"])
+            compras = st.session_state["compras"]  
+
+            # Diccionarios para contar compras y unidades por proveedor
+            compras_por_proveedor = {}
+            unidades_por_proveedor = {}
+
+            for compra in compras:
+                proveedor = compra.idProveedor  
+                cantidad = compra.cantidad  
+
+                if proveedor in compras_por_proveedor:
+                    compras_por_proveedor[proveedor] += 1
+                    unidades_por_proveedor[proveedor] += cantidad
+                else:
+                    compras_por_proveedor[proveedor] = 1
+                    unidades_por_proveedor[proveedor] = cantidad
+
+            
+            lista_proveedores = []
+            for proveedor in compras_por_proveedor:
+                lista_proveedores.append((proveedor, compras_por_proveedor[proveedor], unidades_por_proveedor[proveedor]))
+
+            
+            for i in range(len(lista_proveedores) - 1):
+                for j in range(len(lista_proveedores) - i - 1):
+                    if lista_proveedores[j][1] < lista_proveedores[j + 1][1]:
+                        lista_proveedores[j], lista_proveedores[j + 1] = lista_proveedores[j + 1], lista_proveedores[j]
+                    elif lista_proveedores[j][1] == lista_proveedores[j + 1][1]:  # Empate en compras
+                        if lista_proveedores[j][2] < lista_proveedores[j + 1][2]:  # Comparar unidades
+                            lista_proveedores[j], lista_proveedores[j + 1] = lista_proveedores[j + 1], lista_proveedores[j]
+
+            
+            top_proveedores = lista_proveedores[:3]
+
+            
             st.write("🏢 **Proveedores más frecuentes:**")
-            for proveedor in proveedores:
-                st.write(f"- Proveedor {proveedor[0]}: {proveedor[1]} compras")
+            
+            if top_proveedores:
+                for proveedor in top_proveedores:
+                    st.write(f"- Proveedor {proveedor[0]} :   {proveedor[1]} compras")
+            else:
+                st.write("❌ No hay suficientes datos")
+
 
         elif opcion == "Ventas por período de tiempo":
             fecha_inicio = st.date_input("📅 Fecha de inicio")
@@ -353,11 +393,11 @@ class dashboard:
             with open("ventas.csv", "r") as archivo:
                 next(archivo) 
                 for linea in archivo:
-                    datos = linea.strip().split(",")  # Separar por comas
-                    producto_id = datos[1]  # ID del producto
-                    cantidad = int(datos[4])  # Cantidad vendida
+                    datos = linea.strip().split(",")  
+                    producto_id = datos[1]  
+                    cantidad = int(datos[4])  
 
-                    # Contar la cantidad vendida por producto
+                    
                     if producto_id in conteo_ventas:
                         conteo_ventas[producto_id] += cantidad
                     else:
@@ -365,7 +405,7 @@ class dashboard:
 
             productos_filtrados = [(producto, cantidad) for producto, cantidad in conteo_ventas.items() if cantidad >= 4]
 
-            # Mostrar resultados
+           
             if productos_filtrados:
                 for producto in productos_filtrados:
                     st.write(f"- Producto {producto[0]}: {producto[1]} unidades vendidas")
