@@ -29,8 +29,9 @@ Una vez dentro del Codespace, sigue estos pasos:
 ### 3️⃣ Ejecutar la aplicación
 
 Después de la instalación, inicia la aplicación con:
-    ```bash
+   ```bash
     streamlit run main.py
+   ```
 Se generará un enlace en la terminal. Haz clic en él para acceder a la aplicación en tu navegador.
 
 ### 📧Contacto
