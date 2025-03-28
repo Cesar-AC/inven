@@ -25,3 +25,14 @@ Una vez dentro del Codespace, sigue estos pasos:
 2. **Instalar las dependencias** con el siguiente comando:  
    ```bash
    pip install streamlit unidecode
+
+### 3️⃣ Ejecutar la aplicación
+
+Después de la instalación, inicia la aplicación con:
+    ```bash
+    streamlit run main.py
+Se generará un enlace en la terminal. Haz clic en él para acceder a la aplicación en tu navegador.
+
+### 📧Contacto
+
+Si tienes preguntas o sugerencias, no dudes en contribuir al proyecto o contactar al equipo de desarrollo. ¡Esperamos que StockWise te ayude a gestionar tu inventario de manera efectiva! 🚀
