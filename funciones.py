@@ -194,9 +194,9 @@ def buscarNextID(lista, prefijo):
         return f"{prefijo}001"
 
     last = lista[-1]
-    lastID = getattr(last, f"id{prefijo.capitalize()}")  # Obtiene el atributo dinámicamente
+    lastID = list(vars(last).values())[0] # Obtiene el atributo
     lastID = int(lastID.replace(prefijo, ""))  # Elimina el prefijo y convierte a entero
-    nextID = f"{prefijo}{(lastID+1).zfill(3)}"  # Formatea con ceros a la izquierda
+    nextID = f"{prefijo}{str(lastID + 1).zfill(3)}"  # Formatea con ceros a la izquierda
     return nextID
 
 def mostrarDatos(lista, columnas, atributos, clave_prefijo, actualizar_fn, eliminar_fn):
