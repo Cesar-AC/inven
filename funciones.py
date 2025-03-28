@@ -249,7 +249,10 @@ def filtrarProductos(xproductos):
     
     if opcion == "📄 Nombre":
         cols = st.columns(1)
-        nombre = cols[0].text_input("Nombre a buscar:")
+        nombre = cols[0].selectbox(
+            "",
+            options=["Nombre a buscar"] + [producto.nombre for producto in productos]
+        )
         for producto in xproductos:
             if unidecode(producto.nombre.casefold()) == unidecode(nombre.casefold()):
                 with st.container(): #Agrupa las columnas dentro de un contenedor
@@ -265,7 +268,11 @@ def filtrarProductos(xproductos):
 
     elif opcion == "📑 Categoría":
         cols = st.columns(1)
-        cat = cols[0].text_input("Categoría a buscar:")
+        categorias = ["Belleza", "Tecnología", "Alimentos", "Ropa y Calzado", "Electrónica", "Hogar", "Deportes", "Juguetes"]
+        cat = cols[0].selectbox(
+            "",
+            options=["Categoria a buscar"] + [categoria for categoria in categorias]
+        )
         for producto in xproductos:
             if unidecode(producto.categoria.casefold()) == unidecode(cat.casefold()):
                 with st.container(): #Agrupa las columnas dentro de un contenedor
