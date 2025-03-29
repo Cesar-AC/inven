@@ -42,7 +42,7 @@ def proveedores_mas_frecuentes(self):
 def ventas_por_periodo(fecha_inicio, fecha_fin):
     resultado = []
     for venta in st.session_state["ventas"]:
-        if fecha_inicio <= venta.fechaDeVenta <= fecha_fin:
+        if fecha_inicio <= venta.fechaDeVenta and venta.fechaDeVenta <= fecha_fin:
             resultado.append(venta)
     return resultado
 

@@ -362,8 +362,10 @@ class dashboard:
 
         elif opcion == "Ventas por período de tiempo":
             fecha_inicio = st.date_input("📅 Fecha de inicio")
+            format_fecha_inicio = fecha_inicio.strftime("%d-%m-%Y")
             fecha_fin = st.date_input("📅 Fecha de fin")
-            ventas_filtradas = ventas_por_periodo(str(fecha_inicio), str(fecha_fin))
+            format_fecha_fin = fecha_fin.strftime("%d-%m-%Y")
+            ventas_filtradas = ventas_por_periodo(str(format_fecha_inicio), str(format_fecha_fin))
 
             if ventas_filtradas:
                 st.write("🛒 **Ventas en el período seleccionado:**")
