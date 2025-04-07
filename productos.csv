@@ -1,9 +1,9 @@
 ID del Producto, Nombre, Categoría, Precio, Stock, Descripción
-prod001,Shampoo,Belleza,10.5,50,Shampoo de uso diario
+prod001,Shampoo,Categoria,20000,1,Shampoo de uso diario
 prod002,Crema Facial,Belleza,25,40,Hidratante para todo tipo de piel
 prod003,Computador,Tecnología,800,10,Computador portátil
 prod004,Mouse,Tecnología,20,30,Mouse óptico ergonómico
-prod005,Nevado de Galleta,Alimentos,14.5,129415,Bebida de café con galleta Oreo y crema chantilly
+prod005,Nevado de Galleta,Alimentos,14.5,129381,Bebida de café con galleta Oreo y crema chantilly
 prod006,Pan Integral,Alimentos,4,100,Pan de harina integral y semillas
 prod007,Zapatillas Deportivas,Ropa y Calzado,60,30,Zapatillas cómodas para correr
 prod008,Chaqueta de Cuero,Ropa y Calzado,120,10,Chaqueta clásica de cuero genuino

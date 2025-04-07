@@ -1,5 +1,6 @@
 #Importamos la librería streamlit junto a los datos iniciales
 import streamlit as st
+from sympy import product
 from funciones import *
 
 #Esta clase contiene/actúa como la interfaz
@@ -294,6 +295,18 @@ class dashboard:
 
                 if stock <= 20:  # Filtrar productos con stock menor o igual a 20
                     productos_bajo_stock.append([id_producto, nombre, categoria, precio, stock, descripcion])
+
+            for producto in productos_bajo_stock:
+                stock = productos_bajo_stock[0][4]
+                for i, producto in enumerate(productos_bajo_stock):
+                    stockc = int(producto[4])
+                    if i == 0:
+                        continue
+                    if stockc < stock:
+                        productom = productos_bajo_stock[i-1]
+                        productos_bajo_stock[i-1] = producto
+                        productos_bajo_stock[i] = productom
+                    stock = stockc
 
             st.write("📉 **Productos con stock menor o igual a 20:**")
 
