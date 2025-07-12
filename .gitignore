@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+modelo/__pycache__/ 
+# Entornos virtuales
+venv/
+ENV/
+env/
+
+# VSCode
+.vscode/
+
+# Otros temporales
+*.log

@@ -1,11 +1,18 @@
 ID de Venta, ID del Producto, ID del Cliente, Fecha de Venta, Cantidad
-v001,prod001,cliente01,20-03-2025,5
+v001,prod001,cliente01,20-03-2025,6
 v002,prod002,cliente02,21-03-2025,2
 v003,prod005,cliente03,22-03-2025,3
 v004,prod007,cliente04,23-03-2025,1
-v005,prod008,cliente10,23-03-2025,2
+v005,prod015,cliente10,23-03-2025,2
 v006,prod003,cliente09,24-03-2025,1
 v007,prod010,cliente05,24-03-2025,4
 v008,prod012,cliente06,25-03-2025,2
 v009,prod016,cliente08,25-03-2025,3
 v010,prod014,cliente07,26-03-2025,6
+v011,prod002,cliente01,04-07-2025,3
+v012,prod011,miguel,04-07-2025,3
+v013,prod011,Miguel,04-07-2025,5
+v014,prod017,Eduardo,04-07-2025,3
+v015,prod014,Jose andres,05-07-2025,1
+v016,prod001,Pedrito,05-07-2025,3
+v017,prod017,Miguel,09-07-2025,10

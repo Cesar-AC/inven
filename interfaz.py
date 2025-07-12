@@ -1,6 +1,5 @@
 #Importamos la librería streamlit junto a los datos iniciales
 import streamlit as st
-from sympy import product
 from funciones import *
 
 #Esta clase contiene/actúa como la interfaz
@@ -8,7 +7,7 @@ class dashboard:
     
     def __init__(self):
         #Le da un título a la pestaña
-        st.set_page_config(page_title = "StockWise Dashboard", layout = "wide")
+        st.set_page_config(page_title = "Inven Dashboard", layout = "wide")
         
         #Guarda los datos importados en atributos propios de la clase
         if "productos" not in st.session_state:
@@ -42,7 +41,7 @@ class dashboard:
     #Crea el menú lateral con las respectivas opciones
     def sidebar(self):
         with st.sidebar:
-            st.header("📊 StockWise Dashboard")
+            st.header("📊 Inven Dashboard")
             self.opcion = st.radio("Ir a:", [
                 "Home", "Productos", "Proveedores", "Ventas", "Compras",
                 "Reportes"
@@ -64,9 +63,9 @@ class dashboard:
             self.reportes()
 
     def home(self):
-        st.title("🏠 Home")
-        st.subheader("Bienvenido al Home")
-    
+        st.title("🏠 INVEN STORE")
+        st.subheader("Bienvenido")
+        st.write("Esta es la interfaz principal de Inven Store, donde puedes gestionar productos, proveedores, ventas y compras.")
     def showProductos(self):
         st.title("📦 Productos")
         if 'modo' not in st.session_state:
@@ -158,6 +157,8 @@ class dashboard:
                 st.subheader("Estás viendo los proveedores")
             elif st.session_state.modo == 'agregar':
                 st.subheader("Añadiendo proveedores")
+            elif st.session_state.modo == 'editar':
+                st.subheader("Actualizando proveedores")
         
         # Contenido dinámico
         if st.session_state.modo == 'ver':
@@ -177,72 +178,99 @@ class dashboard:
             eliminarPv(st.session_state.id_eliminando, self.recargar_proveedores)
 
     def showVentas(self):
-        st.title("💰 Ventas")
-        if 'modo' not in st.session_state:
-            st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar', 'editar' o 'eliminar'
-        
-        # Creamos contenedores vacíos para header y botones
-        col1, col2 = st.columns(2)
-        header_placeholder = col1.empty()
-        buttons_placeholder = col2.empty()
-
-        # Botones dinámicos
-        with buttons_placeholder.container():
-            col1b = st.columns(1)[0]
-            with col1b:
-                if st.session_state.modo != 'ver':
-                    if st.button("📋Ver Ventas"):
-                        st.session_state.modo = 'ver'
-                        st.rerun()
-                else:
-                    if st.button("🛒Añadir Venta"):
-                        st.session_state.modo = 'agregar'
-                        st.rerun()
-
-        # Header dinámico
-        with header_placeholder.container():
-            if st.session_state.modo == 'ver':
-                st.subheader("Estás viendo las ventas")
-            elif st.session_state.modo == 'agregar':
-                st.subheader("Añadiendo venta")
-        
-        # Contenido dinámico
-        if st.session_state.modo == 'ver':
-            mostrarDatos(
-                ventas, 
-                ["ID de Venta", "ID del Producto", "ID del Cliente", "Fecha de Venta", "Cantidad", "Opciones"],
-                ["idVenta", "idProducto", "idCliente", "fechaDeVenta", "cantidad"],
-                "v",
-                actualizarV,
-                eliminarV
-            )
-        elif st.session_state.modo == 'agregar':
-            addVenta(self.recargar_ventas, self.recargar_productos)
-        elif st.session_state.modo == 'editar':
-            actualizarV(st.session_state.id_editando, self.recargar_ventas)
-        elif st.session_state.modo == 'eliminar':
-            eliminarV(st.session_state.id_eliminando, self.recargar_ventas)
+            st.title("💰 Ventas")
+            if 'modo' not in st.session_state:
+                st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar', 'editar' o 'eliminar'
             
+            # Creamos contenedores vacíos para header y botones
+            col1, col2 = st.columns(2)
+            header_placeholder = col1.empty()
+            buttons_placeholder = col2.empty()
+
+            # Botones dinámicos
+            with buttons_placeholder.container():
+                col1b = st.columns(1)[0]
+                with col1b:
+                    if st.session_state.modo != 'ver':
+                        if st.button("📋Ver Ventas"):
+                            st.session_state.modo = 'ver'
+                            st.rerun()
+                    else:
+                        if st.button("🛒Añadir Venta"):
+                            st.session_state.modo = 'agregar'
+                            st.rerun()
+
+            # Header dinámico
+            with header_placeholder.container():
+                if st.session_state.modo == 'ver':
+                    st.subheader("Estás viendo las ventas")
+                elif st.session_state.modo == 'agregar':
+                    st.subheader("Añadiendo venta")
+            
+            # Contenido dinámico
+            if st.session_state.modo == 'ver':
+                # 1) Inyectar nombreProducto en cada Venta
+                for v in ventas:
+                    prod = next((p for p in productos if p.idProducto == v.idProducto), None)
+                    v.nombreProducto = prod.nombre if prod else v.idProducto
+
+                # 2) Definir columnas y atributos (nombreProducto en lugar de idProducto)
+                columnas = [
+                    "ID de Venta",
+                    "Producto",
+                    "Nombre del Cliente",
+                    "Fecha de Venta",
+                    "Cantidad",
+                    "Opciones"
+                ]
+                atributos = [
+                    "idVenta",
+                    "nombreProducto",
+                    "idCliente",
+                    "fechaDeVenta",
+                    "cantidad"
+                ]
+
+                # 3) Llamada a mostrarDatos
+                mostrarDatos(
+                    lista=ventas,
+                    columnas=columnas,
+                    atributos=atributos,
+                    clave_prefijo="v",
+                    actualizar_fn=actualizarV,
+                    eliminar_fn=eliminarV
+                )
+
+            elif st.session_state.modo == 'agregar':
+                addVenta(self.recargar_ventas, self.recargar_productos)
+            elif st.session_state.modo == 'editar':
+                actualizarV(st.session_state.id_editando, self.recargar_ventas)
+            elif st.session_state.modo == 'eliminar':
+                eliminarV(st.session_state.id_eliminando, self.recargar_ventas)
+                
+        
     def showCompras(self):
         st.title("🛒 Compras")
+
+        # Inicializa el modo si aún no existe
         if 'modo' not in st.session_state:
-            st.session_state.modo = 'ver'  # Puede ser: 'ver', 'agregar'
-        
-        # Creamos contenedores vacíos para header y botones
+            st.session_state.modo = 'ver'
+
+        # Contenedores para header y botones
         col1, col2 = st.columns(2)
-        header_placeholder = col1.empty()
+        header_placeholder  = col1.empty()
         buttons_placeholder = col2.empty()
 
         # Botones dinámicos
         with buttons_placeholder.container():
-            col1b = st.columns(1)[0]
-            with col1b:
+            btn_col = st.columns(1)[0]
+            with btn_col:
                 if st.session_state.modo != 'ver':
-                    if st.button("📋Ver Compras"):
+                    if st.button("📋 Ver Compras"):
                         st.session_state.modo = 'ver'
                         st.rerun()
                 else:
-                    if st.button("🛒Añadir Compra"):
+                    if st.button("🛒 Añadir Compra"):
                         st.session_state.modo = 'agregar'
                         st.rerun()
 
@@ -252,23 +280,50 @@ class dashboard:
                 st.subheader("Estás viendo las compras")
             elif st.session_state.modo == 'agregar':
                 st.subheader("Añadiendo compra")
-        
+
         # Contenido dinámico
         if st.session_state.modo == 'ver':
+            # 1) Inyecta nombreProducto y nombreProveedor en cada Compra
+            for c in compras:
+                prod = next((p for p in productos   if p.idProducto  == c.idProducto),   None)
+                prov = next((p for p in proveedores if p.idProveedor == c.idProveedor), None)
+                c.nombreProducto  = prod.nombre   if prod else c.idProducto
+                c.nombreProveedor = prov.nombre   if prov else c.idProveedor
+
+            # 2) Columnas y atributos actualizados
+            columnas = [
+                "ID de Compra",
+                "Producto",
+                "Proveedor",
+                "Fecha de Compra",
+                "Cantidad",
+                "Opciones"
+            ]
+            atributos = [
+                "idCompra",
+                "nombreProducto",
+                "nombreProveedor",
+                "fechaDeCompra",
+                "cantidad"
+            ]
+
+            # 3) Mostrar con tu función de paginación/edición
             mostrarDatos(
-                compras, 
-                ["ID de Compra", "ID del Producto", "ID del Proveedor", "Fecha de Compra", "Cantidad", "Opciones"],
-                ["idCompra", "idProducto", "idProveedor", "fechaDeCompra", "cantidad"],
-                "c",
-                actualizarC,
-                eliminarC
+                lista=compras,
+                columnas=columnas,
+                atributos=atributos,
+                clave_prefijo="c",
+                actualizar_fn=actualizarC,
+                eliminar_fn=eliminarC
             )
+
         elif st.session_state.modo == 'agregar':
             addCompra(self.recargar_compras, self.recargar_productos)
         elif st.session_state.modo == 'editar':
             actualizarC(st.session_state.id_editando, self.recargar_compras)
         elif st.session_state.modo == 'eliminar':
             eliminarC(st.session_state.id_eliminando, self.recargar_compras)
+     
                         
     def reportes(self):
         st.title("📑 Reportes")
@@ -329,69 +384,67 @@ class dashboard:
 
         
         elif opcion == "Proveedores más frecuentes":
-            compras = st.session_state["compras"]  
+            compras = st.session_state["compras"]
 
-            # Diccionarios para contar compras y unidades por proveedor
             compras_por_proveedor = {}
             unidades_por_proveedor = {}
 
             for compra in compras:
-                proveedor = compra.idProveedor  
-                cantidad = compra.cantidad  
+                pid = compra.idProveedor
+                qty = int(compra.cantidad)   # <- Aquí convertimos a int
 
-                if proveedor in compras_por_proveedor:
-                    compras_por_proveedor[proveedor] += 1
-                    unidades_por_proveedor[proveedor] += cantidad
-                else:
-                    compras_por_proveedor[proveedor] = 1
-                    unidades_por_proveedor[proveedor] = cantidad
+                compras_por_proveedor[pid] = compras_por_proveedor.get(pid, 0) + 1
+                unidades_por_proveedor[pid] = unidades_por_proveedor.get(pid, 0) + qty
 
-            
-            lista_proveedores = []
-            for proveedor in compras_por_proveedor:
-                lista_proveedores.append((proveedor, compras_por_proveedor[proveedor], unidades_por_proveedor[proveedor]))
-
-            
-            for i in range(len(lista_proveedores) - 1):
-                for j in range(len(lista_proveedores) - i - 1):
-                    if lista_proveedores[j][1] < lista_proveedores[j + 1][1]:
-                        lista_proveedores[j], lista_proveedores[j + 1] = lista_proveedores[j + 1], lista_proveedores[j]
-                    elif lista_proveedores[j][1] == lista_proveedores[j + 1][1]:  # Empate en compras
-                        if lista_proveedores[j][2] < lista_proveedores[j + 1][2]:  # Comparar unidades
-                            lista_proveedores[j], lista_proveedores[j + 1] = lista_proveedores[j + 1], lista_proveedores[j]
-
-            
+            lista_proveedores = [
+                (pid, compras_por_proveedor[pid], unidades_por_proveedor[pid])
+                for pid in compras_por_proveedor
+            ]
+            lista_proveedores.sort(key=lambda x: (x[1], x[2]), reverse=True)
             top_proveedores = lista_proveedores[:3]
 
-            
+            prov_map = {p.idProveedor: p.nombre for p in proveedores}
+
             st.write("🏢 **Proveedores más frecuentes:**")
-            
             if top_proveedores:
-                for proveedor in top_proveedores:
-                    st.write(f"- Proveedor {proveedor[0]} :   {proveedor[1]} compras")
+                for pid, num_compras, total_unidades in top_proveedores:
+                    nombre = prov_map.get(pid, "– Desconocido –")
+                    st.write(f"- **{nombre}** ({pid}): {num_compras} compras, {total_unidades} unidades")
             else:
                 st.write("❌ No hay suficientes datos")
 
 
+
         elif opcion == "Ventas por período de tiempo":
             fecha_inicio = st.date_input("📅 Fecha de inicio")
-            format_fecha_inicio = fecha_inicio.strftime("%d-%m-%Y")
-            fecha_fin = st.date_input("📅 Fecha de fin")
-            format_fecha_fin = fecha_fin.strftime("%d-%m-%Y")
-            ventas_filtradas = ventas_por_periodo(str(format_fecha_inicio), str(format_fecha_fin))
+            fecha_fin    = st.date_input("📅 Fecha de fin")
+            fi = fecha_inicio.strftime("%d-%m-%Y")
+            ff = fecha_fin.strftime("%d-%m-%Y")
+            ventas_filtradas = ventas_por_periodo(fi, ff)
 
             if ventas_filtradas:
                 st.write("🛒 **Ventas en el período seleccionado:**")
 
-                cols = st.columns(5)
-                encabezados = ["ID Venta", "ID Producto", "ID Cliente", "Fecha", "Cantidad"]
-
+                # 1) Cabeceras ahora con “Producto” en lugar de “ID Producto”
+                encabezados = ["ID Venta", "Producto", "ID Cliente", "Fecha", "Cantidad"]
+                cols = st.columns(len(encabezados))
                 for col, titulo in zip(cols, encabezados):
                     col.write(f"**{titulo}**")
 
+                # 2) Para cada venta, resolvemos el nombre del producto
                 for venta in ventas_filtradas:
-                    cols = st.columns(5)
-                    datos = [venta.idVenta, venta.idProducto, venta.idCliente, venta.fechaDeVenta, venta.cantidad]
+                    cols = st.columns(len(encabezados))
+                    # buscamos el objeto Producto
+                    prod = next((p for p in productos if p.idProducto == venta.idProducto), None)
+                    nombre_prod = prod.nombre if prod else venta.idProducto
+
+                    datos = [
+                        venta.idVenta,
+                        nombre_prod,               # <-- aquí el nombre en lugar de la ID
+                        venta.idCliente,
+                        venta.fechaDeVenta,
+                        venta.cantidad
+                    ]
 
                     for col, dato in zip(cols, datos):
                         col.write(dato)
@@ -399,30 +452,32 @@ class dashboard:
             else:
                 st.write("❌ No hay ventas en el período seleccionado.")
 
+
         elif opcion == "Productos más vendidos":
             st.write("🔥 **Productos más vendidos (4+ unidades):**")
 
             conteo_ventas = {}
 
             # Leer el archivo línea por línea
-            with open("ventas.csv", "r") as archivo:
+            with open("ventas.csv", "r", encoding="utf-8") as archivo:
                 next(archivo) 
                 for linea in archivo:
-                    datos = linea.strip().split(",")  
-                    producto_id = datos[1]  
-                    cantidad = int(datos[4])  
+                    datos = linea.strip().split(",")
+                    pid  = datos[1]
+                    qty  = int(datos[4])
+                    conteo_ventas[pid] = conteo_ventas.get(pid, 0) + qty
 
-                    
-                    if producto_id in conteo_ventas:
-                        conteo_ventas[producto_id] += cantidad
-                    else:
-                        conteo_ventas[producto_id] = cantidad
+            # Filtramos los que vendieron >=4 unidades
+            productos_filtrados = [(pid, qty) 
+                                for pid, qty in conteo_ventas.items() 
+                                if qty >= 4]
 
-            productos_filtrados = [(producto, cantidad) for producto, cantidad in conteo_ventas.items() if cantidad >= 4]
-
-           
             if productos_filtrados:
-                for producto in productos_filtrados:
-                    st.write(f"- Producto {producto[0]}: {producto[1]} unidades vendidas")
+                # Creamos mapa ID→Nombre
+                prod_map = {p.idProducto: p.nombre for p in productos}
+
+                for pid, qty in productos_filtrados:
+                    nombre = prod_map.get(pid, pid)
+                    st.write(f"- **{nombre}** ({pid}): {qty} unidades vendidas")
             else:
                 st.write("❌ No hay productos con 4 o más unidades vendidas.")

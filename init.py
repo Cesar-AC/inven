@@ -1,5 +1,5 @@
 #Importamos las clases
-from clases import *
+from modelo.clases import *
 
 #listas con datos predeterminados 
 productos = [ 
@@ -62,20 +62,22 @@ proveFile = 'proveedores.csv'
 ventasFile = 'ventas.csv'
 comprasFile = 'compras.csv'
 
-#Crea un archivo si necesita ser creado
+
+# Crea un archivo si no existe, con codificación utf-8 y BOM
 def writeDataInit():
     global productos, proveedores, ventas, compras
 
     archivos = [productosFile, proveFile, ventasFile, comprasFile]
-    objetos = [Producto, Proveedor, Venta, Compra] 
-    datos = [productos, proveedores, ventas, compras]
+    objetos  = [Producto,   Proveedor,   Venta,      Compra] 
+    datos    = [productos,  proveedores, ventas,     compras]
 
-    for i in range(0, len(archivos)):
+    for archivo, tipo, lista in zip(archivos, objetos, datos):
         try:
-            with open(archivos[i], 'x') as file:
-                writeData(archivos[i], datos[i])
+            # 'x' + encoding utf-8-sig (pone BOM al inicio)
+            with open(archivo, 'x', encoding='utf-8-sig') as f:
+                writeData(archivo, lista)
         except FileExistsError:
-            generateData(archivos[i], datos[i], objetos[i])
+            generateData(archivo, lista, tipo)
 
 #Genera un header según el archivo que se vaya a escribir
 def createHeader(archivo):
@@ -93,19 +95,19 @@ def createHeader(archivo):
 
 #Escribe el archivo con header y los datos
 def writeData(archivo, datos):
-    with open(archivo, 'w') as file:
-        file.write(createHeader(archivo))
+    header = createHeader(archivo)
+    with open(archivo, 'w', encoding='utf-8-sig') as f: 
+        f.write(header)
         for dato in datos:
-            file.write(f"{dato}\n")
+            f.write(f"{dato}\n")
 
-#Si el archivo ya existe, vacía las listas y las actualiza.
+# generateData lee siempre con utf-8
 def generateData(archivo, datos, tipo):
-    datos.clear() #Vacía la lista de datos
-    with open(archivo, 'r') as file:
-        lines = file.readlines()
-        for line in lines[1:]: #Salta la primera línea
-            line = line.strip().split(",") #Crea una lista que contiene toda la informacion del objeto
-            obj = tipo(*line) #Crea un nuevo objeto usando la información
-            datos.append(obj) #Añade este objeto a la lista de datos
+    datos.clear()
+    with open(archivo, 'r', encoding='utf-8-sig') as f:
+        lines = f.readlines()[1:]  # salto header
+    for line in lines:
+        parts = line.strip().split(",")
+        datos.append(tipo(*parts))
 
 writeDataInit() #Ejecuta la función para crear los archivos si no existen
